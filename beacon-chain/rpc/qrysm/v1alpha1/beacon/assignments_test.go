@@ -276,7 +276,7 @@ func TestServer_ListAssignments_HandlesUnscheduledValidator(t *testing.T) {
 	ctx := context.Background()
 	count := 64
 	validators := make([]*qrysmpb.Validator, 0, count)
-	withdrawCreds := make([]byte, 32)
+	withdrawCreds := make([]byte, field_params.WithdrawalCredentialsLength)
 	for i := range count {
 		pubKey := make([]byte, field_params.MLDSA87PubkeyLength)
 		binary.LittleEndian.PutUint64(pubKey, uint64(i))

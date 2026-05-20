@@ -185,6 +185,7 @@ go_test(
         "//beacon-chain/forkchoice/doubly-linked-tree",
         "//beacon-chain/operations/attestations",
         "//beacon-chain/operations/slashings",
+        "//beacon-chain/operations/slashings/mock",
         "//beacon-chain/p2p",
         "//beacon-chain/p2p/encoder",
         "//beacon-chain/p2p/peers",
