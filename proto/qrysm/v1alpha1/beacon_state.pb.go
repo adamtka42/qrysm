@@ -440,7 +440,7 @@ func (x *CheckPtInfo) GetFork() *Fork {
 type DepositMessage struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	PublicKey             []byte                 `protobuf:"bytes,1,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
+	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
 	Amount                uint64                 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache

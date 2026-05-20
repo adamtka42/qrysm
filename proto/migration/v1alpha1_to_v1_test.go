@@ -433,7 +433,7 @@ func TestBeaconStateZondToProto(t *testing.T) {
 		state.ExecutionDepositIndex = 8
 		state.Validators = []*qrysmpb.Validator{{
 			PublicKey:                  bytesutil.PadTo([]byte("publickey"), 2592),
-			WithdrawalCredentials:      bytesutil.PadTo([]byte("withdrawalcredentials"), 64),
+			WithdrawalCredentials:      bytesutil.PadTo([]byte("withdrawalcredentials"), 80),
 			EffectiveBalance:           9,
 			Slashed:                    true,
 			ActivationEligibilityEpoch: 10,
@@ -468,7 +468,7 @@ func TestBeaconStateZondToProto(t *testing.T) {
 		}
 		state.LatestExecutionPayloadHeader = &enginev1.ExecutionPayloadHeaderZond{
 			ParentHash:       bytesutil.PadTo([]byte("parenthash"), 32),
-			FeeRecipient:     bytesutil.PadTo([]byte("feerecipient"), 48),
+			FeeRecipient:     bytesutil.PadTo([]byte("feerecipient"), 64),
 			StateRoot:        bytesutil.PadTo([]byte("stateroot"), 32),
 			ReceiptsRoot:     bytesutil.PadTo([]byte("receiptroot"), 32),
 			LogsBloom:        bytesutil.PadTo([]byte("logsbloom"), 256),

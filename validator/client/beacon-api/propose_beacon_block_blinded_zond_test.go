@@ -270,7 +270,7 @@ func generateSignedBlindedZondBlock() *qrysmpb.GenericSignedBeaconBlock_BlindedZ
 							Proof: test_helpers.FillByteArraySlice(33, test_helpers.FillByteSlice(32, 92)),
 							Data: &qrysmpb.Deposit_Data{
 								PublicKey:             test_helpers.FillByteSlice(2592, 94),
-								WithdrawalCredentials: test_helpers.FillByteSlice(64, 95),
+								WithdrawalCredentials: test_helpers.FillByteSlice(80, 95),
 								Amount:                96,
 								Signature:             test_helpers.FillByteSlice(4627, 97),
 							},
@@ -279,7 +279,7 @@ func generateSignedBlindedZondBlock() *qrysmpb.GenericSignedBeaconBlock_BlindedZ
 							Proof: test_helpers.FillByteArraySlice(33, test_helpers.FillByteSlice(32, 98)),
 							Data: &qrysmpb.Deposit_Data{
 								PublicKey:             test_helpers.FillByteSlice(2592, 100),
-								WithdrawalCredentials: test_helpers.FillByteSlice(64, 101),
+								WithdrawalCredentials: test_helpers.FillByteSlice(80, 101),
 								Amount:                102,
 								Signature:             test_helpers.FillByteSlice(4627, 103),
 							},

@@ -1271,7 +1271,7 @@ func (x *BlindedBeaconBlockBodyZond) GetExecutionPayloadHeader() *v1.ExecutionPa
 
 type ValidatorRegistrationV1 struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FeeRecipient  []byte                 `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"48"`
+	FeeRecipient  []byte                 `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"64"`
 	GasLimit      uint64                 `protobuf:"varint,2,opt,name=gas_limit,json=gasLimit,proto3" json:"gas_limit,omitempty"`
 	Timestamp     uint64                 `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	Pubkey        []byte                 `protobuf:"bytes,4,opt,name=pubkey,proto3" json:"pubkey,omitempty" ssz-size:"2592"`
@@ -1548,7 +1548,7 @@ func (x *SignedBuilderBidZond) GetSignature() []byte {
 type Deposit_Data struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	PublicKey             []byte                 `protobuf:"bytes,1,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
+	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
 	Amount                uint64                 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	Signature             []byte                 `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature,omitempty" ssz-size:"4627"`
 	unknownFields         protoimpl.UnknownFields

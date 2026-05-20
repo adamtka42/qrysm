@@ -43,7 +43,7 @@ func TestWaitForActivation_ValidatorOriginallyExists(t *testing.T) {
 				ActivationEpoch:       0,
 				ExitEpoch:             params.BeaconConfig().FarFutureEpoch,
 				PublicKey:             pubKey1,
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 			},
 		},
 	}
@@ -52,7 +52,7 @@ func TestWaitForActivation_ValidatorOriginallyExists(t *testing.T) {
 	require.NoError(t, err, "Could not get signing root")
 	depData := &qrysmpb.Deposit_Data{
 		PublicKey:             pubKey1,
-		WithdrawalCredentials: bytesutil.PadTo([]byte("hey"), 64),
+		WithdrawalCredentials: bytesutil.PadTo([]byte("hey"), 80),
 		Signature:             make([]byte, field_params.MLDSA87SignatureLength),
 	}
 	domain, err := signing.ComputeDomain(params.BeaconConfig().DomainDeposit, nil, nil)

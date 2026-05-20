@@ -107,7 +107,7 @@ func (ValidatorStatus) EnumDescriptor() ([]byte, []int) {
 type Validator struct {
 	state                      protoimpl.MessageState                                   `protogen:"open.v1"`
 	Pubkey                     []byte                                                   `protobuf:"bytes,1,opt,name=pubkey,proto3" json:"pubkey,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials      []byte                                                   `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
+	WithdrawalCredentials      []byte                                                   `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
 	EffectiveBalance           uint64                                                   `protobuf:"varint,3,opt,name=effective_balance,json=effectiveBalance,proto3" json:"effective_balance,omitempty"`
 	Slashed                    bool                                                     `protobuf:"varint,4,opt,name=slashed,proto3" json:"slashed,omitempty"`
 	ActivationEligibilityEpoch github_com_theQRL_qrysm_consensus_types_primitives.Epoch `protobuf:"varint,5,opt,name=activation_eligibility_epoch,json=activationEligibilityEpoch,proto3" json:"activation_eligibility_epoch,omitempty" cast-type:"github.com/theQRL/qrysm/consensus-types/primitives.Epoch"`

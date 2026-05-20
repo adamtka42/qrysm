@@ -73,7 +73,7 @@ func setupGenesisState(tb testing.TB, count uint64) *qrysmpb.BeaconStateZond {
 		genesisState.Balances = append(genesisState.Balances, params.BeaconConfig().MaxEffectiveBalance)
 		genesisState.LatestExecutionPayloadHeader = &enginev1.ExecutionPayloadHeaderZond{
 			ParentHash:       make([]byte, 32),
-			FeeRecipient:     make([]byte, 48),
+			FeeRecipient:     make([]byte, fieldparams.FeeRecipientLength),
 			StateRoot:        make([]byte, 32),
 			ReceiptsRoot:     make([]byte, 32),
 			LogsBloom:        make([]byte, 256),

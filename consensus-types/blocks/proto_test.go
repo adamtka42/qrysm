@@ -388,13 +388,13 @@ func bodyBlindedZond(t *testing.T) *BeaconBlockBody {
 }
 
 func getFields() fields {
-	b48 := make([]byte, 48)
+	b64 := make([]byte, field_params.FeeRecipientLength)
 	b2592 := make([]byte, 2592)
 	b256 := make([]byte, 256)
 	var root [32]byte
-	var creds [64]byte
+	var creds [field_params.WithdrawalCredentialsLength]byte
 	var sig [field_params.MLDSA87SignatureLength]byte
-	b48[0], b48[5], b48[10] = 'q', 'u', 'x'
+	b64[0], b64[5], b64[10] = 'q', 'u', 'x'
 	b2592[0], b2592[5], b2592[10] = 'b', 'a', 'r'
 	b256[0], b256[5], b256[10] = 'x', 'y', 'z'
 	root[0], root[5], root[10] = 'a', 'b', 'c'
@@ -508,7 +508,7 @@ func getFields() fields {
 	}
 	execPayloadZond := &enginev1.ExecutionPayloadZond{
 		ParentHash:    root[:],
-		FeeRecipient:  b48,
+		FeeRecipient:  b64,
 		StateRoot:     root[:],
 		ReceiptsRoot:  root[:],
 		LogsBloom:     b256,
@@ -528,14 +528,14 @@ func getFields() fields {
 		Withdrawals: []*enginev1.Withdrawal{
 			{
 				Index:   128,
-				Address: b48,
+				Address: b64,
 				Amount:  128,
 			},
 		},
 	}
 	execPayloadHeaderZond := &enginev1.ExecutionPayloadHeaderZond{
 		ParentHash:       root[:],
-		FeeRecipient:     b48,
+		FeeRecipient:     b64,
 		StateRoot:        root[:],
 		ReceiptsRoot:     root[:],
 		LogsBloom:        b256,

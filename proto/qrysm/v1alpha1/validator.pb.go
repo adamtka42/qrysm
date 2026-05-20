@@ -1598,7 +1598,7 @@ func (x *CommitteeSubnetsSubscribeRequest) GetIsAggregator() []bool {
 type Validator struct {
 	state                      protoimpl.MessageState                                   `protogen:"open.v1"`
 	PublicKey                  []byte                                                   `protobuf:"bytes,1,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials      []byte                                                   `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
+	WithdrawalCredentials      []byte                                                   `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
 	EffectiveBalance           uint64                                                   `protobuf:"varint,3,opt,name=effective_balance,json=effectiveBalance,proto3" json:"effective_balance,omitempty"`
 	Slashed                    bool                                                     `protobuf:"varint,4,opt,name=slashed,proto3" json:"slashed,omitempty"`
 	ActivationEligibilityEpoch github_com_theQRL_qrysm_consensus_types_primitives.Epoch `protobuf:"varint,5,opt,name=activation_eligibility_epoch,json=activationEligibilityEpoch,proto3" json:"activation_eligibility_epoch,omitempty" cast-type:"github.com/theQRL/qrysm/consensus-types/primitives.Epoch"`
@@ -2102,7 +2102,7 @@ func (x *FeeRecipientByPubKeyRequest) GetPublicKey() []byte {
 
 type FeeRecipientByPubKeyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	FeeRecipient  []byte                 `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"48"`
+	FeeRecipient  []byte                 `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"64"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2590,7 +2590,7 @@ func (x *DoppelGangerResponse_ValidatorResponse) GetDuplicateExists() bool {
 
 type PrepareBeaconProposerRequest_FeeRecipientContainer struct {
 	state          protoimpl.MessageState                                            `protogen:"open.v1"`
-	FeeRecipient   []byte                                                            `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"48"`
+	FeeRecipient   []byte                                                            `protobuf:"bytes,1,opt,name=fee_recipient,json=feeRecipient,proto3" json:"fee_recipient,omitempty" ssz-size:"64"`
 	ValidatorIndex github_com_theQRL_qrysm_consensus_types_primitives.ValidatorIndex `protobuf:"varint,2,opt,name=validator_index,json=validatorIndex,proto3" json:"validator_index,omitempty" cast-type:"github.com/theQRL/qrysm/consensus-types/primitives.ValidatorIndex"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache

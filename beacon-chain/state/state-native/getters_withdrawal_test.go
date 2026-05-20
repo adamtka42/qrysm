@@ -76,7 +76,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -97,7 +97,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -125,7 +125,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -153,7 +153,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -191,7 +191,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance + 1
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -218,7 +218,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(0),
 			}
@@ -245,7 +245,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance + 1
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(0),
 			}
@@ -273,7 +273,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}
@@ -295,7 +295,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 		for i := range s.validators {
 			s.balances[i] = params.BeaconConfig().MaxEffectiveBalance
 			val := &qrysmpb.Validator{
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,
 				WithdrawableEpoch:     primitives.Epoch(1),
 			}

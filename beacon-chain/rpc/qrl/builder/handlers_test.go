@@ -119,7 +119,7 @@ func TestExpectedWithdrawals(t *testing.T) {
 			require.NoError(t, err)
 			val := &qrysmpb.Validator{
 				PublicKey:             mlDSA87Key.PublicKey().Marshal(),
-				WithdrawalCredentials: make([]byte, 64),
+				WithdrawalCredentials: make([]byte, 80),
 				ExitEpoch:             params.BeaconConfig().FarFutureEpoch,
 				WithdrawableEpoch:     params.BeaconConfig().FarFutureEpoch,
 				EffectiveBalance:      params.BeaconConfig().MaxEffectiveBalance,

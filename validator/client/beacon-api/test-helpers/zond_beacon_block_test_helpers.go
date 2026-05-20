@@ -182,7 +182,7 @@ func GenerateProtoZondBeaconBlock() *qrysmpb.BeaconBlockZond {
 					Proof: FillByteArraySlice(33, FillByteSlice(32, 92)),
 					Data: &qrysmpb.Deposit_Data{
 						PublicKey:             FillByteSlice(2592, 94),
-						WithdrawalCredentials: FillByteSlice(64, 95),
+						WithdrawalCredentials: FillByteSlice(80, 95),
 						Amount:                96,
 						Signature:             FillByteSlice(4627, 97),
 					},
@@ -191,7 +191,7 @@ func GenerateProtoZondBeaconBlock() *qrysmpb.BeaconBlockZond {
 					Proof: FillByteArraySlice(33, FillByteSlice(32, 98)),
 					Data: &qrysmpb.Deposit_Data{
 						PublicKey:             FillByteSlice(2592, 100),
-						WithdrawalCredentials: FillByteSlice(64, 101),
+						WithdrawalCredentials: FillByteSlice(80, 101),
 						Amount:                102,
 						Signature:             FillByteSlice(4627, 103),
 					},
@@ -429,7 +429,7 @@ func GenerateJsonZondBeaconBlock() *apimiddleware.BeaconBlockZondJson {
 					Proof: FillEncodedByteArraySlice(33, FillEncodedByteSlice(32, 92)),
 					Data: &apimiddleware.Deposit_DataJson{
 						PublicKey:             FillEncodedByteSlice(2592, 94),
-						WithdrawalCredentials: FillEncodedByteSlice(64, 95),
+						WithdrawalCredentials: FillEncodedByteSlice(80, 95),
 						Amount:                "96",
 						Signature:             FillEncodedByteSlice(4627, 97),
 					},
@@ -438,7 +438,7 @@ func GenerateJsonZondBeaconBlock() *apimiddleware.BeaconBlockZondJson {
 					Proof: FillEncodedByteArraySlice(33, FillEncodedByteSlice(32, 98)),
 					Data: &apimiddleware.Deposit_DataJson{
 						PublicKey:             FillEncodedByteSlice(2592, 100),
-						WithdrawalCredentials: FillEncodedByteSlice(64, 101),
+						WithdrawalCredentials: FillEncodedByteSlice(80, 101),
 						Amount:                "102",
 						Signature:             FillEncodedByteSlice(4627, 103),
 					},
