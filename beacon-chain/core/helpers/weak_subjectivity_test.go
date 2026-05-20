@@ -7,7 +7,6 @@ import (
 
 	"github.com/theQRL/qrysm/beacon-chain/core/helpers"
 	"github.com/theQRL/qrysm/beacon-chain/state"
-	field_params "github.com/theQRL/qrysm/config/fieldparams"
 	"github.com/theQRL/qrysm/config/params"
 	"github.com/theQRL/qrysm/consensus-types/primitives"
 	"github.com/theQRL/qrysm/encoding/bytesutil"
@@ -269,10 +268,8 @@ func genState(t *testing.T, valCount, avgBalance uint64) state.BeaconState {
 	balances := make([]uint64, len(validators))
 	for i := range valCount {
 		validators[i] = &qrysmpb.Validator{
-			PublicKey:             make([]byte, field_params.MLDSA87PubkeyLength),
-			WithdrawalCredentials: make([]byte, 80),
-			EffectiveBalance:      avgBalance * 1e12,
-			ExitEpoch:             params.BeaconConfig().FarFutureEpoch,
+			EffectiveBalance: avgBalance * 1e12,
+			ExitEpoch:        params.BeaconConfig().FarFutureEpoch,
 		}
 		balances[i] = validators[i].EffectiveBalance
 	}

@@ -114,13 +114,13 @@ func TestPreparePublishedBlindedBlock(t *testing.T) {
 func TestPrepareValidatorAggregates(t *testing.T) {
 	body := &tempSyncCommitteesResponseJson{
 		Data: &tempSyncCommitteeValidatorsJson{
-			Validators: []string{"1", "2"},
+			Validators: []syncCommitteeIndex{"1", "2"},
 			ValidatorAggregates: []*tempSyncSubcommitteeValidatorsJson{
 				{
-					Validators: []string{"3", "4"},
+					Validators: []syncCommitteeIndex{"3", "4"},
 				},
 				{
-					Validators: []string{"5"},
+					Validators: []syncCommitteeIndex{"5"},
 				},
 			},
 		},
@@ -130,6 +130,14 @@ func TestPrepareValidatorAggregates(t *testing.T) {
 
 	container := &SyncCommitteesResponseJson{}
 	runDefault, errJson := prepareValidatorAggregates(bodyJson, container)
+	require.Equal(t, nil, errJson)
+	require.Equal(t, apimiddleware.RunDefault(false), runDefault)
+	assert.DeepEqual(t, []string{"1", "2"}, container.Data.Validators)
+	require.DeepEqual(t, [][]string{{"3", "4"}, {"5"}}, container.Data.ValidatorAggregates)
+
+	bodyJson = []byte(`{"data":{"validators":[1,2],"validator_aggregates":[{"validators":[3,4]},{"validators":[5]}]}}`)
+	container = &SyncCommitteesResponseJson{}
+	runDefault, errJson = prepareValidatorAggregates(bodyJson, container)
 	require.Equal(t, nil, errJson)
 	require.Equal(t, apimiddleware.RunDefault(false), runDefault)
 	assert.DeepEqual(t, []string{"1", "2"}, container.Data.Validators)

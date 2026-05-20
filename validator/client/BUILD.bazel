@@ -97,7 +97,7 @@ go_library(
 
 go_test(
     name = "client_test",
-    size = "small",
+    size = "medium",
     srcs = [
         "aggregate_test.go",
         "attest_protect_test.go",

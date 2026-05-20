@@ -29,7 +29,7 @@ func TestVerifyConnectivity(t *testing.T) {
 	if err != nil {
 		t.Skipf("skipping: outbound network unavailable (%v)", err)
 	}
-	conn.Close()
+	require.NoError(t, conn.Close())
 	params.SetupTestConfigCleanup(t)
 
 	ln, err := net.Listen("tcp", "127.0.0.1:0")

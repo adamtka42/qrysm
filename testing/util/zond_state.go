@@ -119,7 +119,7 @@ func buildGenesisBeaconStateZond(genesisTime uint64, preState state.BeaconState,
 		return nil, errors.New("no executiondata provided for genesis state")
 	}
 
-	randaoMixes := make([][]byte, params.BeaconConfig().EpochsPerHistoricalVector)
+	randaoMixes := make([][]byte, fieldparams.RandaoMixesLength)
 	for i := range randaoMixes {
 		h := make([]byte, 32)
 		copy(h, executionData.BlockHash)
@@ -128,22 +128,22 @@ func buildGenesisBeaconStateZond(genesisTime uint64, preState state.BeaconState,
 
 	zeroHash := params.BeaconConfig().ZeroHash[:]
 
-	activeIndexRoots := make([][]byte, params.BeaconConfig().EpochsPerHistoricalVector)
+	activeIndexRoots := make([][]byte, fieldparams.RandaoMixesLength)
 	for i := range activeIndexRoots {
 		activeIndexRoots[i] = zeroHash
 	}
 
-	blockRoots := make([][]byte, params.BeaconConfig().SlotsPerHistoricalRoot)
+	blockRoots := make([][]byte, fieldparams.BlockRootsLength)
 	for i := range blockRoots {
 		blockRoots[i] = zeroHash
 	}
 
-	stateRoots := make([][]byte, params.BeaconConfig().SlotsPerHistoricalRoot)
+	stateRoots := make([][]byte, fieldparams.StateRootsLength)
 	for i := range stateRoots {
 		stateRoots[i] = zeroHash
 	}
 
-	slashings := make([]uint64, params.BeaconConfig().EpochsPerSlashingsVector)
+	slashings := make([]uint64, fieldparams.SlashingsLength)
 
 	genesisValidatorsRoot, err := stateutil.ValidatorRegistryRoot(preState.Validators())
 	if err != nil {
@@ -245,7 +245,7 @@ func buildGenesisBeaconStateZond(genesisTime uint64, preState state.BeaconState,
 
 	var pubKeys [][]byte
 	vals := preState.Validators()
-	for i := uint64(0); i < params.BeaconConfig().SyncCommitteeSize; i++ {
+	for i := uint64(0); i < fieldparams.SyncCommitteeLength; i++ {
 		j := i % uint64(len(vals))
 		pubKeys = append(pubKeys, vals[j].PublicKey)
 	}

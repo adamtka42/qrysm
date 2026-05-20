@@ -756,11 +756,12 @@ func TestInsertFinalizedDeposits(t *testing.T) {
 	assert.NoError(t, gs.SetExecutionDepositIndex(8))
 	assert.NoError(t, service.cfg.StateGen.SaveState(ctx, [32]byte{'m', 'o', 'c', 'k'}, gs))
 	var zeroSig [4627]byte
+	zeroWithdrawalCredentials := make([]byte, field_params.WithdrawalCredentialsLength)
 	for i := uint64(0); i < uint64(4*params.BeaconConfig().SlotsPerEpoch); i++ {
 		root := []byte(strconv.Itoa(int(i)))
 		assert.NoError(t, depositCache.InsertDeposit(ctx, &qrysmpb.Deposit{Data: &qrysmpb.Deposit_Data{
 			PublicKey:             bytesutil.FromBytes2592([field_params.MLDSA87PubkeyLength]byte{}),
-			WithdrawalCredentials: params.BeaconConfig().ZeroHash[:],
+			WithdrawalCredentials: zeroWithdrawalCredentials,
 			Amount:                0,
 			Signature:             zeroSig[:],
 		}, Proof: [][]byte{root}}, 100+i, int64(i), bytesutil.ToBytes32(root)))
@@ -786,17 +787,18 @@ func TestInsertFinalizedDeposits_PrunePendingDeposits(t *testing.T) {
 	assert.NoError(t, gs.SetExecutionDepositIndex(8))
 	assert.NoError(t, service.cfg.StateGen.SaveState(ctx, [32]byte{'m', 'o', 'c', 'k'}, gs))
 	var zeroSig [4627]byte
+	zeroWithdrawalCredentials := make([]byte, field_params.WithdrawalCredentialsLength)
 	for i := uint64(0); i < uint64(4*params.BeaconConfig().SlotsPerEpoch); i++ {
 		root := []byte(strconv.Itoa(int(i)))
 		assert.NoError(t, depositCache.InsertDeposit(ctx, &qrysmpb.Deposit{Data: &qrysmpb.Deposit_Data{
 			PublicKey:             bytesutil.FromBytes2592([field_params.MLDSA87PubkeyLength]byte{}),
-			WithdrawalCredentials: params.BeaconConfig().ZeroHash[:],
+			WithdrawalCredentials: zeroWithdrawalCredentials,
 			Amount:                0,
 			Signature:             zeroSig[:],
 		}, Proof: [][]byte{root}}, 100+i, int64(i), bytesutil.ToBytes32(root)))
 		depositCache.InsertPendingDeposit(ctx, &qrysmpb.Deposit{Data: &qrysmpb.Deposit_Data{
 			PublicKey:             bytesutil.FromBytes2592([field_params.MLDSA87PubkeyLength]byte{}),
-			WithdrawalCredentials: params.BeaconConfig().ZeroHash[:],
+			WithdrawalCredentials: zeroWithdrawalCredentials,
 			Amount:                0,
 			Signature:             zeroSig[:],
 		}, Proof: [][]byte{root}}, 100+i, int64(i), bytesutil.ToBytes32(root))
@@ -830,11 +832,12 @@ func TestInsertFinalizedDeposits_MultipleFinalizedRoutines(t *testing.T) {
 	assert.NoError(t, gs2.SetExecutionDepositIndex(13))
 	assert.NoError(t, service.cfg.StateGen.SaveState(ctx, [32]byte{'m', 'o', 'c', 'k', '2'}, gs2))
 	var zeroSig [4627]byte
+	zeroWithdrawalCredentials := make([]byte, field_params.WithdrawalCredentialsLength)
 	for i := uint64(0); i < uint64(4*params.BeaconConfig().SlotsPerEpoch); i++ {
 		root := []byte(strconv.Itoa(int(i)))
 		assert.NoError(t, depositCache.InsertDeposit(ctx, &qrysmpb.Deposit{Data: &qrysmpb.Deposit_Data{
 			PublicKey:             bytesutil.FromBytes2592([field_params.MLDSA87PubkeyLength]byte{}),
-			WithdrawalCredentials: params.BeaconConfig().ZeroHash[:],
+			WithdrawalCredentials: zeroWithdrawalCredentials,
 			Amount:                0,
 			Signature:             zeroSig[:],
 		}, Proof: [][]byte{root}}, 100+i, int64(i), bytesutil.ToBytes32(root)))
@@ -1002,6 +1005,7 @@ func TestOnBlock_ProcessBlocksParallel(t *testing.T) {
 		var wg sync.WaitGroup
 		wg.Add(4)
 		go func() {
+			defer wg.Done()
 			preState, err := service.getBlockPreState(ctx, wsb1.Block())
 			require.NoError(t, err)
 			postState, err := service.validateStateTransition(ctx, preState, wsb1)
@@ -1009,9 +1013,9 @@ func TestOnBlock_ProcessBlocksParallel(t *testing.T) {
 			roblock, err := consensusblocks.NewROBlockWithRoot(wsb1, r1)
 			require.NoError(t, err)
 			require.NoError(t, service.postBlockProcess(ctx, roblock, postState, true))
-			wg.Done()
 		}()
 		go func() {
+			defer wg.Done()
 			preState, err := service.getBlockPreState(ctx, wsb2.Block())
 			require.NoError(t, err)
 			postState, err := service.validateStateTransition(ctx, preState, wsb2)
@@ -1019,9 +1023,9 @@ func TestOnBlock_ProcessBlocksParallel(t *testing.T) {
 			roblock, err := consensusblocks.NewROBlockWithRoot(wsb2, r2)
 			require.NoError(t, err)
 			require.NoError(t, service.postBlockProcess(ctx, roblock, postState, true))
-			wg.Done()
 		}()
 		go func() {
+			defer wg.Done()
 			preState, err := service.getBlockPreState(ctx, wsb3.Block())
 			require.NoError(t, err)
 			postState, err := service.validateStateTransition(ctx, preState, wsb3)
@@ -1029,9 +1033,9 @@ func TestOnBlock_ProcessBlocksParallel(t *testing.T) {
 			roblock, err := consensusblocks.NewROBlockWithRoot(wsb3, r3)
 			require.NoError(t, err)
 			require.NoError(t, service.postBlockProcess(ctx, roblock, postState, true))
-			wg.Done()
 		}()
 		go func() {
+			defer wg.Done()
 			preState, err := service.getBlockPreState(ctx, wsb4.Block())
 			require.NoError(t, err)
 			postState, err := service.validateStateTransition(ctx, preState, wsb4)
@@ -1039,7 +1043,6 @@ func TestOnBlock_ProcessBlocksParallel(t *testing.T) {
 			roblock, err := consensusblocks.NewROBlockWithRoot(wsb4, r4)
 			require.NoError(t, err)
 			require.NoError(t, service.postBlockProcess(ctx, roblock, postState, true))
-			wg.Done()
 		}()
 		wg.Wait()
 		require.LogsDoNotContain(t, logHook, "New head does not exist in DB. Do nothing")

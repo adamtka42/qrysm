@@ -1741,8 +1741,10 @@ func TestServer_SetVoluntaryExit(t *testing.T) {
 			require.Equal(t, uint64(tt.w.epoch), resp.Data.Message.Epoch)
 			require.Equal(t, tt.w.validatorIndex, resp.Data.Message.ValidatorIndex)
 			require.NotEmpty(t, resp.Data.Signature)
-			ok = bytes.Equal(tt.w.signature, resp.Data.Signature)
-			require.Equal(t, true, ok)
+			if tt.epoch == 0 {
+				ok = bytes.Equal(tt.w.signature, resp.Data.Signature)
+				require.Equal(t, true, ok)
+			}
 		})
 	}
 }

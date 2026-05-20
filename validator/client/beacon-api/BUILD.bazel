@@ -47,6 +47,7 @@ go_library(
         "//beacon-chain/rpc/qrl/shared",
         "//beacon-chain/rpc/qrl/validator",
         "//beacon-chain/rpc/qrysm/validator",
+        "//config/fieldparams",
         "//config/params",
         "//consensus-types/primitives",
         "//encoding/bytesutil",

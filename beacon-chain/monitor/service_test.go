@@ -50,7 +50,9 @@ func setupService(t *testing.T) *Service {
 		15:  true,
 		44:  true,
 		67:  true,
+		73:  true,
 		117: true,
+		227: true,
 	}
 	latestPerformance := map[primitives.ValidatorIndex]ValidatorLatestPerformance{
 		1: {
@@ -74,6 +76,18 @@ func setupService(t *testing.T) *Service {
 		67: {
 			balance: 40000000000000,
 		},
+		73: {
+			balance:      40000000000000,
+			timelyHead:   true,
+			timelySource: true,
+			timelyTarget: true,
+		},
+		227: {
+			balance:      39999900000000,
+			timelyHead:   true,
+			timelySource: true,
+			timelyTarget: true,
+		},
 	}
 	aggregatedPerformance := map[primitives.ValidatorIndex]ValidatorAggregatedPerformance{
 		1: {
@@ -92,6 +106,8 @@ func setupService(t *testing.T) *Service {
 		44:  {},
 		67:  {},
 		117: {},
+		73:  {},
+		227: {},
 		15:  {},
 	}
 	trackedSyncCommitteeIndices := map[primitives.ValidatorIndex][]primitives.CommitteeIndex{
@@ -201,7 +217,7 @@ func TestStart(t *testing.T) {
 	// wait for Logrus
 	time.Sleep(1000 * time.Millisecond)
 	require.LogsContain(t, hook, "Synced to head epoch, starting reporting performance")
-	require.LogsContain(t, hook, "\"Starting service\" ValidatorIndices=\"[1 15 44 67 117]\"")
+	require.LogsContain(t, hook, "\"Starting service\" ValidatorIndices=\"[1 15 44 67 73 117 227]\"")
 	s.Lock()
 	require.Equal(t, s.isLogging, true, "monitor is not running")
 	s.Unlock()
@@ -229,7 +245,13 @@ func TestInitializePerformanceStructures(t *testing.T) {
 		67: {
 			balance: 40000000000000,
 		},
+		73: {
+			balance: 40000000000000,
+		},
 		117: {
+			balance: 40000000000000,
+		},
+		227: {
 			balance: 40000000000000,
 		},
 	}
@@ -246,7 +268,13 @@ func TestInitializePerformanceStructures(t *testing.T) {
 		67: {
 			startBalance: 40000000000000,
 		},
+		73: {
+			startBalance: 40000000000000,
+		},
 		117: {
+			startBalance: 40000000000000,
+		},
+		227: {
 			startBalance: 40000000000000,
 		},
 	}

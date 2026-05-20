@@ -8,7 +8,6 @@ import (
 	"github.com/theQRL/qrysm/beacon-chain/state"
 	state_native "github.com/theQRL/qrysm/beacon-chain/state/state-native"
 	fieldparams "github.com/theQRL/qrysm/config/fieldparams"
-	"github.com/theQRL/qrysm/config/params"
 	enginev1 "github.com/theQRL/qrysm/proto/engine/v1"
 	qrysmpb "github.com/theQRL/qrysm/proto/qrysm/v1alpha1"
 )
@@ -17,7 +16,7 @@ import (
 // It fills state and block roots with hex representations of natural numbers starting with 0.
 // Example: 16 becomes 0x00...0f.
 func FillRootsNaturalOptZond(state *qrysmpb.BeaconStateZond) error {
-	roots, err := PrepareRoots(int(params.BeaconConfig().SlotsPerHistoricalRoot))
+	roots, err := PrepareRoots(fieldparams.BlockRootsLength)
 	if err != nil {
 		return err
 	}
@@ -28,16 +27,16 @@ func FillRootsNaturalOptZond(state *qrysmpb.BeaconStateZond) error {
 
 // NewBeaconStateZond creates a beacon state with minimum marshalable fields.
 func NewBeaconStateZond(options ...func(state *qrysmpb.BeaconStateZond) error) (state.BeaconState, error) {
-	pubkeys := make([][]byte, params.BeaconConfig().SyncCommitteeSize)
+	pubkeys := make([][]byte, fieldparams.SyncCommitteeLength)
 	for i := range pubkeys {
 		pubkeys[i] = make([]byte, fieldparams.MLDSA87PubkeyLength)
 	}
 
 	seed := &qrysmpb.BeaconStateZond{
-		BlockRoots:                 filledByteSlice2D(uint64(params.BeaconConfig().SlotsPerHistoricalRoot), 32),
-		StateRoots:                 filledByteSlice2D(uint64(params.BeaconConfig().SlotsPerHistoricalRoot), 32),
-		Slashings:                  make([]uint64, params.BeaconConfig().EpochsPerSlashingsVector),
-		RandaoMixes:                filledByteSlice2D(uint64(params.BeaconConfig().EpochsPerHistoricalVector), 32),
+		BlockRoots:                 filledByteSlice2D(fieldparams.BlockRootsLength, 32),
+		StateRoots:                 filledByteSlice2D(fieldparams.StateRootsLength, 32),
+		Slashings:                  make([]uint64, fieldparams.SlashingsLength),
+		RandaoMixes:                filledByteSlice2D(fieldparams.RandaoMixesLength, 32),
 		Validators:                 make([]*qrysmpb.Validator, 0),
 		CurrentJustifiedCheckpoint: &qrysmpb.Checkpoint{Root: make([]byte, fieldparams.RootLength)},
 		ExecutionData: &qrysmpb.ExecutionData{

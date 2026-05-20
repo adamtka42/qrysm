@@ -151,13 +151,31 @@ type tempSyncCommitteesResponseJson struct {
 	Data *tempSyncCommitteeValidatorsJson `json:"data"`
 }
 
+type syncCommitteeIndex string
+
+func (s *syncCommitteeIndex) UnmarshalJSON(data []byte) error {
+	var value string
+	if err := json.Unmarshal(data, &value); err == nil {
+		*s = syncCommitteeIndex(value)
+		return nil
+	}
+	var number json.Number
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.UseNumber()
+	if err := decoder.Decode(&number); err != nil {
+		return err
+	}
+	*s = syncCommitteeIndex(number.String())
+	return nil
+}
+
 type tempSyncCommitteeValidatorsJson struct {
-	Validators          []string                              `json:"validators"`
+	Validators          []syncCommitteeIndex                  `json:"validators"`
 	ValidatorAggregates []*tempSyncSubcommitteeValidatorsJson `json:"validator_aggregates"`
 }
 
 type tempSyncSubcommitteeValidatorsJson struct {
-	Validators []string `json:"validators"`
+	Validators []syncCommitteeIndex `json:"validators"`
 }
 
 // https://ethereum.github.io/beacon-APIs/?urls.primaryName=v2.0.0#/Beacon/getEpochSyncCommittees returns validator_aggregates as a nested array.
@@ -173,11 +191,16 @@ func prepareValidatorAggregates(body []byte, responseContainer any) (apimiddlewa
 	}
 
 	container.Data = &SyncCommitteeValidatorsJson{}
-	container.Data.Validators = tempContainer.Data.Validators
+	container.Data.Validators = make([]string, len(tempContainer.Data.Validators))
+	for i, validator := range tempContainer.Data.Validators {
+		container.Data.Validators[i] = string(validator)
+	}
 	container.Data.ValidatorAggregates = make([][]string, len(tempContainer.Data.ValidatorAggregates))
 	for i, srcValAgg := range tempContainer.Data.ValidatorAggregates {
 		dstValAgg := make([]string, len(srcValAgg.Validators))
-		copy(dstValAgg, tempContainer.Data.ValidatorAggregates[i].Validators)
+		for j, validator := range srcValAgg.Validators {
+			dstValAgg[j] = string(validator)
+		}
 		container.Data.ValidatorAggregates[i] = dstValAgg
 	}
 

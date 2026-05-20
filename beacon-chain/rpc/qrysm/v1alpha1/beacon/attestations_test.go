@@ -492,22 +492,22 @@ func TestServer_mapAttestationToTargetRoot(t *testing.T) {
 
 func TestServer_ListIndexedAttestations_GenesisEpoch(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	db := dbTest.SetupDB(t)
 	helpers.ClearCache()
 	ctx := context.Background()
 	targetRoot1 := bytesutil.ToBytes32([]byte("root"))
 	targetRoot2 := bytesutil.ToBytes32([]byte("root2"))
 
+	const numValidators = uint64(512)
+	state, _ := util.DeterministicGenesisStateZond(t, numValidators)
+	committee, err := helpers.BeaconCommitteeFromState(context.Background(), state, 0, 0)
+	require.NoError(t, err)
+	committeeSize := uint64(len(committee))
+
 	count := params.BeaconConfig().SlotsPerEpoch
 	atts := make([]*qrysmpb.Attestation, 0, count)
 	atts2 := make([]*qrysmpb.Attestation, 0, count)
-
-	// We will set up `numValidators` validators below. With one committee per
-	// slot the committee size is numValidators / SlotsPerEpoch, which is
-	// also the bit length each aggregation bitlist needs to match.
-	const numValidators = uint64(512)
-	committeeSize := numValidators / uint64(params.BeaconConfig().SlotsPerEpoch)
 
 	for i := range count {
 		var targetRoot [32]byte
@@ -543,10 +543,6 @@ func TestServer_ListIndexedAttestations_GenesisEpoch(t *testing.T) {
 
 	}
 
-	// numValidators is fixed above so that committee size matches the bit
-	// length used for aggregation bits.
-	state, _ := util.DeterministicGenesisStateZond(t, numValidators)
-
 	// Next up we convert the test attestations to indexed form:
 	indexedAtts := make([]*qrysmpb.IndexedAttestation, len(atts)+len(atts2))
 	for i := range atts {
@@ -572,7 +568,7 @@ func TestServer_ListIndexedAttestations_GenesisEpoch(t *testing.T) {
 		HeadFetcher:        &chainMock.ChainService{State: state},
 		StateGen:           stategen.New(db, doublylinkedtree.New()),
 	}
-	err := db.SaveStateSummary(ctx, &qrysmpb.StateSummary{
+	err = db.SaveStateSummary(ctx, &qrysmpb.StateSummary{
 		Root: targetRoot1[:],
 		Slot: 1,
 	})
@@ -609,7 +605,7 @@ func TestServer_ListIndexedAttestations_OldEpoch(t *testing.T) {
 	// Force mainnet to keep EpochsPerHistoricalVector matched with the
 	// compile-time fieldparams.RandaoMixesLength (65536); other tests in
 	// the package may have flipped to minimal beforehand.
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	db := dbTest.SetupDB(t)
 	helpers.ClearCache()
 	ctx := context.Background()

@@ -16,7 +16,7 @@ func TestMain(m *testing.M) {
 	// requires regenerating the SSZ stubs with `-tags minimal`.
 	prevConfig := params.BeaconConfig().Copy()
 	defer params.OverrideBeaconConfig(prevConfig)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	resetFlags := flags.Get()
 	flags.Init(&flags.GlobalFlags{

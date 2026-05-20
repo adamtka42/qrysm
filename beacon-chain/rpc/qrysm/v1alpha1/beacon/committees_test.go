@@ -84,7 +84,7 @@ func addDefaultReplayerBuilder(s *Server, h stategen.HistoryAccessor) {
 
 func TestServer_ListBeaconCommittees_PreviousEpoch(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	ctx := context.Background()
 
 	db := dbTest.SetupDB(t)

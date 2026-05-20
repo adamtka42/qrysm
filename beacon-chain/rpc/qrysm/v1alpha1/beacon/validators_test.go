@@ -1021,7 +1021,7 @@ func TestServer_ListValidators_DefaultPageSize(t *testing.T) {
 
 func TestServer_ListValidators_FromOldEpoch(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	transition.SkipSlotCache.Disable()
 
 	ctx := context.Background()
@@ -1092,7 +1092,7 @@ func TestServer_ListValidators_FromOldEpoch(t *testing.T) {
 
 func TestServer_ListValidators_ProcessHeadStateSlots(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
@@ -1365,7 +1365,7 @@ func TestServer_GetValidatorParticipation_CannotRequestFutureEpoch(t *testing.T)
 func TestServer_GetValidatorParticipation_OrphanedUntilGenesis(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
@@ -1434,7 +1434,7 @@ func TestServer_GetValidatorParticipation_OrphanedUntilGenesis(t *testing.T) {
 
 func TestServer_GetValidatorParticipation_CurrentAndPrevEpochWithBits(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	transition.SkipSlotCache.Disable()
 
 	t.Run("zond", func(t *testing.T) {
@@ -1536,7 +1536,7 @@ func TestGetValidatorPerformance_Syncing(t *testing.T) {
 func TestGetValidatorPerformance_OK(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	ctx := context.Background()
 	epoch := primitives.Epoch(1)
@@ -1761,7 +1761,7 @@ func TestGetValidatorPerformance_IndicesPubkeys(t *testing.T) {
 func TestGetValidatorPerformanceZond_OK(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	ctx := context.Background()
 	epoch := primitives.Epoch(1)
@@ -1878,7 +1878,7 @@ func TestServer_GetIndividualVotes_RequestFutureSlot(t *testing.T) {
 
 func TestServer_GetIndividualVotes_ValidatorsDontExist(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
@@ -1955,7 +1955,7 @@ func TestServer_GetIndividualVotes_Working(t *testing.T) {
 	helpers.ClearCache()
 
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.MainnetConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
 
@@ -2094,7 +2094,7 @@ func TestServer_GetIndividualVotes_WorkingAltair(t *testing.T) {
 func TestServer_GetIndividualVotes_AltairEndOfEpoch(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
 
@@ -2182,7 +2182,7 @@ func TestServer_GetIndividualVotes_AltairEndOfEpoch(t *testing.T) {
 func TestServer_GetIndividualVotes_BellatrixEndOfEpoch(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
 
@@ -2270,7 +2270,7 @@ func TestServer_GetIndividualVotes_BellatrixEndOfEpoch(t *testing.T) {
 func TestServer_GetIndividualVotes_ZondEndOfEpoch(t *testing.T) {
 	helpers.ClearCache()
 	params.SetupTestConfigCleanup(t)
-	params.OverrideBeaconConfig(params.BeaconConfig())
+	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	beaconDB := dbTest.SetupDB(t)
 	ctx := context.Background()
 

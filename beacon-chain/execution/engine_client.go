@@ -436,9 +436,13 @@ func (s *Service) retrievePayloadsFromExecutionHashes(
 	var payloadBodies []*pb.ExecutionPayloadBodyV1
 	var err error
 	if features.Get().EnableOptionalEngineMethods {
-		payloadBodies, err = s.GetPayloadBodiesByHash(ctx, executionHashes)
-		if err != nil {
-			return nil, fmt.Errorf("could not fetch payload bodies by hash %#x: %v", executionHashes, err)
+		payloadBodies = make([]*pb.ExecutionPayloadBodyV1, 0, len(executionHashes))
+		for _, executionHash := range executionHashes {
+			bodies, chunkErr := s.GetPayloadBodiesByHash(ctx, []common.Hash{executionHash})
+			if chunkErr != nil {
+				return nil, fmt.Errorf("could not fetch payload body by hash %#x: %v", executionHash, chunkErr)
+			}
+			payloadBodies = append(payloadBodies, bodies...)
 		}
 	} else {
 		execBlocks, err = s.ExecutionBlocksByHashes(ctx, executionHashes, true /* with txs*/)
