@@ -88,9 +88,9 @@ func (p *Program) Push(val any) *Program {
 	case uint256.Int:
 		p.pushBig(v.ToBig())
 	case common.Address:
-		p.pushBig(new(big.Int).SetBytes(v.Bytes()))
+		p.pushBytes(v.Bytes())
 	case *common.Address:
-		p.pushBig(new(big.Int).SetBytes(v.Bytes()))
+		p.pushBytes(v.Bytes())
 	case []byte:
 		p.pushBig(new(big.Int).SetBytes(v))
 	case byte:
@@ -228,6 +228,22 @@ func (p *Program) Mstore(data []byte, memStart uint32) {
 		p.Push(uint32(idx) + memStart)
 		p.Op(ops.MSTORE8)
 	}
+}
+
+func (p *Program) pushBytes(valBytes []byte) {
+	if len(valBytes) == 0 {
+		valBytes = []byte{0}
+	}
+	bLen := len(valBytes)
+	if bLen > 64 {
+		panic(fmt.Sprintf("Push value too large, %d bytes", bLen))
+	}
+	if bLen <= 32 {
+		p.add(byte(vm.PUSH1) - 1 + byte(bLen))
+	} else {
+		p.add(byte(vm.PUSH33) + byte(bLen-33))
+	}
+	p.AddAll(valBytes)
 }
 
 // MemToStorage copies the given memory area into SSTORE slots,

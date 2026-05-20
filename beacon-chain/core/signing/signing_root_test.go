@@ -83,7 +83,10 @@ func TestSigningRoot_ComputeDomainAndSign(t *testing.T) {
 			got, err := signing.ComputeDomainAndSign(
 				beaconState, time.CurrentEpoch(beaconState), block, tt.domainType, privKeys[idx])
 			require.NoError(t, err)
-			require.DeepEqual(t, tt.want, got, "Incorrect signature")
+			assert.Equal(t, field_params.MLDSA87SignatureLength, len(got))
+			domain, err := signing.Domain(beaconState.Fork(), time.CurrentEpoch(beaconState), tt.domainType, beaconState.GenesisValidatorsRoot())
+			require.NoError(t, err)
+			require.NoError(t, signing.VerifySigningRoot(block, privKeys[idx].PublicKey().Marshal(), got, domain))
 		})
 	}
 }

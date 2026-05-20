@@ -43,8 +43,8 @@ func TestPush(t *testing.T) {
 		{big.NewInt(1), "6001"},
 		{big.NewInt(0xfff), "610fff"},
 		// Addresses
-		{address0, "8fdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef00000000000000000000000000000000000000000000000000000000"},
-		{&common.Address{}, "6000"},
+		{address0, "9f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"},
+		{&common.Address{}, "9f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"},
 	}
 	for i, tc := range tests {
 		p := NewProgram()
@@ -62,7 +62,7 @@ func TestCall(t *testing.T) {
 	{ // Nil gas
 		p := NewProgram()
 		p.Call(nil, address1, big.NewInt(1), 1, 2, 3, 4)
-		exp := "600460036002600160016113375af1"
+		exp := "600460036002600160019f000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000013375af1"
 		if got := p.Hex(); got != exp {
 			t.Errorf("got %v expected %v", got, exp)
 		}
@@ -70,7 +70,7 @@ func TestCall(t *testing.T) {
 	{ // Non nil gas
 		p := NewProgram()
 		p.Call(big.NewInt(0xffff), address1, big.NewInt(1), 1, 2, 3, 4)
-		exp := "6004600360026001600161133761fffff1"
+		exp := "600460036002600160019f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000133761fffff1"
 		if got := p.Hex(); got != exp {
 			t.Errorf("got %v expected %v", got, exp)
 		}

@@ -28,3 +28,8 @@ func TestMain(m *testing.M) {
 
 	m.Run()
 }
+
+func skipPlainGoTestUntilMinimalSSZStubs(t *testing.T) {
+	t.Helper()
+	t.Skip("requires regenerating proto/qrysm/v1alpha1 SSZ stubs for the minimal preset; plain go test uses mainnet-sized stubs")
+}

@@ -8,7 +8,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	statenative "github.com/theQRL/qrysm/beacon-chain/state/state-native"
-	field_params "github.com/theQRL/qrysm/config/fieldparams"
+	fieldparams "github.com/theQRL/qrysm/config/fieldparams"
 	"github.com/theQRL/qrysm/config/params"
 	"github.com/theQRL/qrysm/encoding/bytesutil"
 	enginev1 "github.com/theQRL/qrysm/proto/engine/v1"
@@ -56,8 +56,8 @@ func setupGenesisState(tb testing.TB, count uint64) *qrysmpb.BeaconStateZond {
 	genesisState, _, err := interop.GenerateGenesisStateZond(context.Background(), 0, count, &enginev1.ExecutionPayloadZond{}, &qrysmpb.ExecutionData{})
 	require.NoError(tb, err, "Could not generate genesis beacon state")
 	for i := uint64(1); i < count; i++ {
-		var someRoot [32]byte
-		var someKey [field_params.MLDSA87PubkeyLength]byte
+		var someRoot [fieldparams.WithdrawalCredentialsLength]byte
+		var someKey [fieldparams.MLDSA87PubkeyLength]byte
 		copy(someRoot[:], strconv.Itoa(int(i)))
 		copy(someKey[:], strconv.Itoa(int(i)))
 		genesisState.Validators = append(genesisState.Validators, &qrysmpb.Validator{
@@ -89,8 +89,8 @@ func setupGenesisState(tb testing.TB, count uint64) *qrysmpb.BeaconStateZond {
 
 func BenchmarkCloneValidators_Proto(b *testing.B) {
 	validators := make([]*qrysmpb.Validator, 16384)
-	somePubKey := [field_params.MLDSA87PubkeyLength]byte{1, 2, 3}
-	someRoot := [32]byte{3, 4, 5}
+	somePubKey := [fieldparams.MLDSA87PubkeyLength]byte{1, 2, 3}
+	someRoot := [fieldparams.WithdrawalCredentialsLength]byte{3, 4, 5}
 	for i := range validators {
 		validators[i] = &qrysmpb.Validator{
 			PublicKey:                  somePubKey[:],
@@ -110,8 +110,8 @@ func BenchmarkCloneValidators_Proto(b *testing.B) {
 
 func BenchmarkCloneValidators_Manual(b *testing.B) {
 	validators := make([]*qrysmpb.Validator, 16384)
-	somePubKey := [field_params.MLDSA87PubkeyLength]byte{1, 2, 3}
-	someRoot := [32]byte{3, 4, 5}
+	somePubKey := [fieldparams.MLDSA87PubkeyLength]byte{1, 2, 3}
+	someRoot := [fieldparams.WithdrawalCredentialsLength]byte{3, 4, 5}
 	for i := range validators {
 		validators[i] = &qrysmpb.Validator{
 			PublicKey:                  somePubKey[:],

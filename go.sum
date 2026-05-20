@@ -64,6 +64,8 @@ github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMx
 github.com/VictoriaMetrics/fastcache v1.13.0 h1:AW4mheMR5Vd9FkAPUv+NH6Nhw+fmbTMGMsNAoA/+4G0=
 github.com/VictoriaMetrics/fastcache v1.13.0/go.mod h1:hHXhl4DA2fTL2HTZDJFXWgW0LNjo6B+4aj2Wmng3TjU=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
+github.com/adamtka42/go-qrl v0.0.0-20260514160501-60d65d4ef6d3 h1:iBXmKrTsxWAwt0d86qvf6y5yMFjeOWab7CLQtnr7w6s=
+github.com/adamtka42/go-qrl v0.0.0-20260514160501-60d65d4ef6d3/go.mod h1:s2JiffHWtYmL8AqziMYEkpquOiCx+DtK9T5Mo2xEYQ8=
 github.com/adamtka42/go-qrllib v0.0.0-20260514082652-72713a2743a1 h1:o3aPah23OmgJwjnffTbobteHngb8a7DtPqASUVQ5IlI=
 github.com/adamtka42/go-qrllib v0.0.0-20260514082652-72713a2743a1/go.mod h1:/W0nvjeCmuvpOCyfm4gs6BxDPWpaeC5l4KtrcLS3c4E=
 github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5/go.mod h1:SkGFH1ia65gfNATL8TAiHDNxPzPdmEL5uirI2Uyuz6c=

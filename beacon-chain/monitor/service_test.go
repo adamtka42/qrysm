@@ -48,9 +48,9 @@ func setupService(t *testing.T) *Service {
 	trackedVals := map[primitives.ValidatorIndex]bool{
 		1:   true,
 		15:  true,
-		25:  true,
-		67: true,
-		185: true,
+		44:  true,
+		67:  true,
+		117: true,
 	}
 	latestPerformance := map[primitives.ValidatorIndex]ValidatorLatestPerformance{
 		1: {
@@ -59,13 +59,13 @@ func setupService(t *testing.T) *Service {
 		15: {
 			balance: 39999900000000,
 		},
-		25: {
+		44: {
 			balance:      39999900000000,
 			timelyHead:   true,
 			timelySource: true,
 			timelyTarget: true,
 		},
-		185: {
+		117: {
 			balance:      40000000000000,
 			timelyHead:   true,
 			timelySource: true,
@@ -89,14 +89,14 @@ func setupService(t *testing.T) *Service {
 			totalSyncCommitteeContributions: 0,
 			totalSyncCommitteeAggregations:  0,
 		},
-		25:  {},
-		67: {},
-		185: {},
+		44:  {},
+		67:  {},
+		117: {},
 		15:  {},
 	}
 	trackedSyncCommitteeIndices := map[primitives.ValidatorIndex][]primitives.CommitteeIndex{
-		1:   {0, 1, 2, 3},
-		25: {4, 5},
+		1:  {0, 1, 2, 3},
+		44: {4, 5},
 	}
 	return &Service{
 		config: &ValidatorMonitorConfig{
@@ -201,7 +201,7 @@ func TestStart(t *testing.T) {
 	// wait for Logrus
 	time.Sleep(1000 * time.Millisecond)
 	require.LogsContain(t, hook, "Synced to head epoch, starting reporting performance")
-	require.LogsContain(t, hook, "\"Starting service\" ValidatorIndices=\"[1 15 25 67 185]\"")
+	require.LogsContain(t, hook, "\"Starting service\" ValidatorIndices=\"[1 15 44 67 117]\"")
 	s.Lock()
 	require.Equal(t, s.isLogging, true, "monitor is not running")
 	s.Unlock()
@@ -223,13 +223,13 @@ func TestInitializePerformanceStructures(t *testing.T) {
 		15: {
 			balance: 40000000000000,
 		},
-		25: {
+		44: {
 			balance: 40000000000000,
 		},
 		67: {
 			balance: 40000000000000,
 		},
-		185: {
+		117: {
 			balance: 40000000000000,
 		},
 	}
@@ -240,13 +240,13 @@ func TestInitializePerformanceStructures(t *testing.T) {
 		15: {
 			startBalance: 40000000000000,
 		},
-		25: {
+		44: {
 			startBalance: 40000000000000,
 		},
 		67: {
 			startBalance: 40000000000000,
 		},
-		185: {
+		117: {
 			startBalance: 40000000000000,
 		},
 	}
@@ -323,6 +323,8 @@ func TestMonitorRoutine(t *testing.T) {
 	genConfig := util.DefaultBlockGenConfig()
 	block, err := util.GenerateFullBlockZond(genesis, keys, genConfig, 1)
 	require.NoError(t, err)
+	trackedVals[block.Block.ProposerIndex] = true
+	latestPerformance[block.Block.ProposerIndex] = ValidatorLatestPerformance{balance: 39999900000000}
 	root, err := block.GetBlock().HashTreeRoot()
 	require.NoError(t, err)
 	require.NoError(t, svc.config.StateGen.SaveState(ctx, root, genesis))
@@ -341,7 +343,7 @@ func TestMonitorRoutine(t *testing.T) {
 
 	// wait for Logrus
 	time.Sleep(1000 * time.Millisecond)
-	wanted1 := fmt.Sprintf("\"Proposed beacon block was included\" BalanceChange=100000000 BlockRoot=%#x NewBalance=40000000000000 ParentRoot=0x94aa18823444 ProposerIndex=22 Slot=1 Version=0 prefix=monitor", bytesutil.Trunc(root[:]))
+	wanted1 := fmt.Sprintf("\"Proposed beacon block was included\" BalanceChange=100000000 BlockRoot=%#x NewBalance=40000000000000 ParentRoot=%#x ProposerIndex=%d Slot=1 Version=0 prefix=monitor", bytesutil.Trunc(root[:]), bytesutil.Trunc(block.Block.ParentRoot), block.Block.ProposerIndex)
 	require.LogsContain(t, hook, wanted1)
 
 }
