@@ -269,7 +269,7 @@ func TestAttests_NextSlot(t *testing.T) {
 
 		cancel()
 	}()
-	run(ctx, v)
+	require.NoError(t, run(ctx, v))
 	<-attSubmitted
 	require.Equal(t, true, v.AttestToBlockHeadCalled, "SubmitAttestation(%d) was not called", slot)
 	assert.Equal(t, uint64(slot), v.AttestToBlockHeadArg1, "SubmitAttestation was called with wrong arg")
@@ -289,7 +289,7 @@ func TestProposes_NextSlot(t *testing.T) {
 
 		cancel()
 	}()
-	run(ctx, v)
+	require.NoError(t, run(ctx, v))
 	<-blockProposed
 	require.Equal(t, true, v.ProposeBlockCalled, "ProposeBlock(%d) was not called", slot)
 	assert.Equal(t, uint64(slot), v.ProposeBlockArg1, "ProposeBlock was called with wrong arg")
@@ -310,7 +310,7 @@ func TestBothProposesAndAttests_NextSlot(t *testing.T) {
 
 		cancel()
 	}()
-	run(ctx, v)
+	require.NoError(t, run(ctx, v))
 	<-attSubmitted
 	<-blockProposed
 	require.Equal(t, true, v.AttestToBlockHeadCalled, "SubmitAttestation(%d) was not called", slot)
