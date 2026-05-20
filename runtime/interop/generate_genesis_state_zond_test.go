@@ -14,6 +14,11 @@ import (
 )
 
 func TestGenerateGenesisStateZond(t *testing.T) {
+	params.SetupTestConfigCleanup(t)
+	if fieldparams.Preset == "minimal" {
+		params.OverrideBeaconConfig(params.MinimalSpecConfig().Copy())
+	}
+
 	ep := &enginev1.ExecutionPayloadZond{
 		ParentHash:    make([]byte, 32),
 		FeeRecipient:  make([]byte, fieldparams.FeeRecipientLength),

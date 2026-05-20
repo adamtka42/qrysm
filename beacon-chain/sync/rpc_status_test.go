@@ -35,6 +35,13 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+func waitGroupDoneOnce(wg *sync.WaitGroup) func() {
+	var once sync.Once
+	return func() {
+		once.Do(wg.Done)
+	}
+}
+
 func TestStatusRPCHandler_Disconnects_OnForkVersionMismatch(t *testing.T) {
 	p1 := p2ptest.NewTestP2P(t)
 	p2 := p2ptest.NewTestP2P(t)
@@ -70,8 +77,9 @@ func TestStatusRPCHandler_Disconnects_OnForkVersionMismatch(t *testing.T) {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		expectSuccess(t, stream)
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
@@ -84,8 +92,9 @@ func TestStatusRPCHandler_Disconnects_OnForkVersionMismatch(t *testing.T) {
 	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 	var wg2 sync.WaitGroup
 	wg2.Add(1)
+	done2 := waitGroupDoneOnce(&wg2)
 	p2.BHost.SetStreamHandler(pcl2, func(stream network.Stream) {
-		defer wg2.Done()
+		defer done2()
 		msg := new(primitives.SSZUint64)
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, msg))
 		assert.Equal(t, p2ptypes.GoodbyeCodeWrongNetwork, *msg)
@@ -141,8 +150,9 @@ func TestStatusRPCHandler_ConnectsOnGenesis(t *testing.T) {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		expectSuccess(t, stream)
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
@@ -226,8 +236,9 @@ func TestStatusRPCHandler_ReturnsHelloMessage(t *testing.T) {
 	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		expectSuccess(t, stream)
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
@@ -338,11 +349,12 @@ func TestHandshakeHandlers_Roundtrip(t *testing.T) {
 	// Setup streams
 	pcl := protocol.ID("/consensus/beacon_chain/req/status/1/ssz_snappy")
 	topic := string(pcl)
-	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
+	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(10, 10, time.Second, false)
 	var wg sync.WaitGroup
 	wg.Add(1)
+	statusDone := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer statusDone()
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 		log.WithField("status", out).Warn("received status")
@@ -360,11 +372,12 @@ func TestHandshakeHandlers_Roundtrip(t *testing.T) {
 
 	pcl = "/consensus/beacon_chain/req/ping/1/ssz_snappy"
 	topic = string(pcl)
-	r2.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
+	r2.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(10, 10, time.Second, false)
 	var wg2 sync.WaitGroup
 	wg2.Add(1)
+	pingDone := waitGroupDoneOnce(&wg2)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg2.Done()
+		defer pingDone()
 		out := new(primitives.SSZUint64)
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 		assert.Equal(t, uint64(2), uint64(*out))
@@ -460,8 +473,9 @@ func TestStatusRPCRequest_RequestSent(t *testing.T) {
 	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 		digest, err := r.currentForkDigest()
@@ -570,8 +584,9 @@ func TestStatusRPCRequest_FinalizedBlockExists(t *testing.T) {
 	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 		assert.NoError(t, r2.validateStatusMessage(context.Background(), out))
@@ -757,8 +772,9 @@ func TestStatusRPCRequest_FinalizedBlockSkippedSlots(t *testing.T) {
 		r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 		var wg sync.WaitGroup
 		wg.Add(1)
+		done := waitGroupDoneOnce(&wg)
 		p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-			defer wg.Done()
+			defer done()
 			out := &qrysmpb.Status{}
 			assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 			assert.Equal(t, tt.expectError, r2.validateStatusMessage(context.Background(), out) != nil)
@@ -833,8 +849,9 @@ func TestStatusRPCRequest_BadPeerHandshake(t *testing.T) {
 	r.rateLimiter.limiterMap[topic] = leakybucket.NewCollector(1, 1, time.Second, false)
 	var wg sync.WaitGroup
 	wg.Add(1)
+	done := waitGroupDoneOnce(&wg)
 	p2.BHost.SetStreamHandler(pcl, func(stream network.Stream) {
-		defer wg.Done()
+		defer done()
 		out := &qrysmpb.Status{}
 		assert.NoError(t, r.cfg.p2p.Encoding().DecodeWithMaxLength(stream, out))
 		expected := &qrysmpb.Status{

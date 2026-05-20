@@ -103,21 +103,23 @@ func validateDeposit(depositData *DepositData, credential *Credential) bool {
 		return false
 	}
 
-	if len(withdrawalCredentials) != 64 {
-		panic(fmt.Errorf("failed to derive ML-DSA-87 depositKey from signingSeed | reason %v", err))
+	if len(withdrawalCredentials) != field_params.WithdrawalCredentialsLength {
+		panic(fmt.Errorf("invalid withdrawal credentials length %d, want %d",
+			len(withdrawalCredentials), field_params.WithdrawalCredentialsLength))
 	}
 
-	zeroBytes11 := make([]uint8, 11)
-	if reflect.DeepEqual(withdrawalCredentials[0], params.BeaconConfig().ExecutionAddressWithdrawalPrefixByte) {
-		if !reflect.DeepEqual(withdrawalCredentials[1:12], zeroBytes11) {
-			panic("withdrawal credentials zero bytes not found for index 1:12")
+	const withdrawalAddressOffset = 16
+	zeroPadding := make([]byte, withdrawalAddressOffset-1)
+	if withdrawalCredentials[0] == params.BeaconConfig().ExecutionAddressWithdrawalPrefixByte {
+		if !reflect.DeepEqual(withdrawalCredentials[1:withdrawalAddressOffset], zeroPadding) {
+			panic(fmt.Errorf("withdrawal credentials zero bytes not found for index 1:%d", withdrawalAddressOffset))
 		}
 		if err != nil {
 			panic(fmt.Errorf("failed to read withdrawal address | reason %v", err))
 		}
-		if !reflect.DeepEqual(withdrawalCredentials[16:], credential.withdrawalAddress.Bytes()) {
-			panic(fmt.Errorf("withdrawalCredentials[16:] %x mismatch with credential.QRLWithdrawalAddress %x",
-				withdrawalCredentials[16:], credential.withdrawalAddress.Bytes()))
+		if !reflect.DeepEqual(withdrawalCredentials[withdrawalAddressOffset:], credential.withdrawalAddress.Bytes()) {
+			panic(fmt.Errorf("withdrawalCredentials[%d:] %x mismatch with credential.QRLWithdrawalAddress %x",
+				withdrawalAddressOffset, withdrawalCredentials[withdrawalAddressOffset:], credential.withdrawalAddress.Bytes()))
 		}
 	} else {
 		panic(fmt.Errorf("invalid prefixbyte withdrawalCredentials[0] %x", withdrawalCredentials[0]))

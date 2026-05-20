@@ -4,6 +4,7 @@ package qrl
 
 import (
 	ssz "github.com/prysmaticlabs/fastssz"
+	fieldparams "github.com/theQRL/qrysm/config/fieldparams"
 	github_com_theQRL_qrysm_consensus_types_primitives "github.com/theQRL/qrysm/consensus-types/primitives"
 	v1 "github.com/theQRL/qrysm/proto/engine/v1"
 )
@@ -1610,11 +1611,11 @@ func (s *SyncAggregate) MarshalSSZ() ([]byte, error) {
 // MarshalSSZTo ssz marshals the SyncAggregate object to a target array
 func (s *SyncAggregate) MarshalSSZTo(buf []byte) (dst []byte, err error) {
 	dst = buf
-	offset := int(20)
+	offset := int(fieldparams.SyncAggregateSyncCommitteeBytesLength + 4)
 
 	// Field (0) 'SyncCommitteeBits'
-	if size := len(s.SyncCommitteeBits); size != 16 {
-		err = ssz.ErrBytesLengthFn("--.SyncCommitteeBits", size, 16)
+	if size := len(s.SyncCommitteeBits); size != fieldparams.SyncAggregateSyncCommitteeBytesLength {
+		err = ssz.ErrBytesLengthFn("--.SyncCommitteeBits", size, fieldparams.SyncAggregateSyncCommitteeBytesLength)
 		return
 	}
 	dst = append(dst, s.SyncCommitteeBits...)
@@ -1624,8 +1625,8 @@ func (s *SyncAggregate) MarshalSSZTo(buf []byte) (dst []byte, err error) {
 	offset += len(s.SyncCommitteeSignatures) * 4627
 
 	// Field (1) 'SyncCommitteeSignatures'
-	if size := len(s.SyncCommitteeSignatures); size > 128 {
-		err = ssz.ErrListTooBigFn("--.SyncCommitteeSignatures", size, 128)
+	if size := len(s.SyncCommitteeSignatures); size > fieldparams.SyncCommitteeLength {
+		err = ssz.ErrListTooBigFn("--.SyncCommitteeSignatures", size, fieldparams.SyncCommitteeLength)
 		return
 	}
 	for ii := 0; ii < len(s.SyncCommitteeSignatures); ii++ {
@@ -1643,7 +1644,8 @@ func (s *SyncAggregate) MarshalSSZTo(buf []byte) (dst []byte, err error) {
 func (s *SyncAggregate) UnmarshalSSZ(buf []byte) error {
 	var err error
 	size := uint64(len(buf))
-	if size < 20 {
+	fixedSize := uint64(fieldparams.SyncAggregateSyncCommitteeBytesLength + 4)
+	if size < fixedSize {
 		return ssz.ErrSize
 	}
 
@@ -1652,23 +1654,23 @@ func (s *SyncAggregate) UnmarshalSSZ(buf []byte) error {
 
 	// Field (0) 'SyncCommitteeBits'
 	if cap(s.SyncCommitteeBits) == 0 {
-		s.SyncCommitteeBits = make([]byte, 0, len(buf[0:16]))
+		s.SyncCommitteeBits = make([]byte, 0, len(buf[0:fieldparams.SyncAggregateSyncCommitteeBytesLength]))
 	}
-	s.SyncCommitteeBits = append(s.SyncCommitteeBits, buf[0:16]...)
+	s.SyncCommitteeBits = append(s.SyncCommitteeBits, buf[0:fieldparams.SyncAggregateSyncCommitteeBytesLength]...)
 
 	// Offset (1) 'SyncCommitteeSignatures'
-	if o1 = ssz.ReadOffset(buf[16:20]); o1 > size {
+	if o1 = ssz.ReadOffset(buf[fieldparams.SyncAggregateSyncCommitteeBytesLength:fixedSize]); o1 > size {
 		return ssz.ErrOffset
 	}
 
-	if o1 < 20 {
+	if o1 < fixedSize {
 		return ssz.ErrInvalidVariableOffset
 	}
 
 	// Field (1) 'SyncCommitteeSignatures'
 	{
 		buf = tail[o1:]
-		num, err := ssz.DivideInt2(len(buf), 4627, 128)
+		num, err := ssz.DivideInt2(len(buf), 4627, fieldparams.SyncCommitteeLength)
 		if err != nil {
 			return err
 		}
@@ -1685,7 +1687,7 @@ func (s *SyncAggregate) UnmarshalSSZ(buf []byte) error {
 
 // SizeSSZ returns the ssz encoded size in bytes for the SyncAggregate object
 func (s *SyncAggregate) SizeSSZ() (size int) {
-	size = 20
+	size = fieldparams.SyncAggregateSyncCommitteeBytesLength + 4
 
 	// Field (1) 'SyncCommitteeSignatures'
 	size += len(s.SyncCommitteeSignatures) * 4627
@@ -1703,16 +1705,16 @@ func (s *SyncAggregate) HashTreeRootWith(hh *ssz.Hasher) (err error) {
 	indx := hh.Index()
 
 	// Field (0) 'SyncCommitteeBits'
-	if size := len(s.SyncCommitteeBits); size != 16 {
-		err = ssz.ErrBytesLengthFn("--.SyncCommitteeBits", size, 16)
+	if size := len(s.SyncCommitteeBits); size != fieldparams.SyncAggregateSyncCommitteeBytesLength {
+		err = ssz.ErrBytesLengthFn("--.SyncCommitteeBits", size, fieldparams.SyncAggregateSyncCommitteeBytesLength)
 		return
 	}
 	hh.PutBytes(s.SyncCommitteeBits)
 
 	// Field (1) 'SyncCommitteeSignatures'
 	{
-		if size := len(s.SyncCommitteeSignatures); size > 128 {
-			err = ssz.ErrListTooBigFn("--.SyncCommitteeSignatures", size, 128)
+		if size := len(s.SyncCommitteeSignatures); size > fieldparams.SyncCommitteeLength {
+			err = ssz.ErrListTooBigFn("--.SyncCommitteeSignatures", size, fieldparams.SyncCommitteeLength)
 			return
 		}
 		subIndx := hh.Index()
@@ -1726,9 +1728,9 @@ func (s *SyncAggregate) HashTreeRootWith(hh *ssz.Hasher) (err error) {
 
 		numItems := uint64(len(s.SyncCommitteeSignatures))
 		if ssz.EnableVectorizedHTR {
-			hh.MerkleizeWithMixinVectorizedHTR(subIndx, numItems, 128)
+			hh.MerkleizeWithMixinVectorizedHTR(subIndx, numItems, fieldparams.SyncCommitteeLength)
 		} else {
-			hh.MerkleizeWithMixin(subIndx, numItems, 128)
+			hh.MerkleizeWithMixin(subIndx, numItems, fieldparams.SyncCommitteeLength)
 		}
 	}
 
@@ -5966,7 +5968,7 @@ func (s *SyncCommitteeContribution) MarshalSSZ() ([]byte, error) {
 // MarshalSSZTo ssz marshals the SyncCommitteeContribution object to a target array
 func (s *SyncCommitteeContribution) MarshalSSZTo(buf []byte) (dst []byte, err error) {
 	dst = buf
-	offset := int(68)
+	offset := int(52 + fieldparams.SyncCommitteeAggregationBytesLength)
 
 	// Field (0) 'Slot'
 	dst = ssz.MarshalUint64(dst, uint64(s.Slot))
@@ -5982,8 +5984,8 @@ func (s *SyncCommitteeContribution) MarshalSSZTo(buf []byte) (dst []byte, err er
 	dst = ssz.MarshalUint64(dst, s.SubcommitteeIndex)
 
 	// Field (3) 'AggregationBits'
-	if size := len(s.AggregationBits); size != 16 {
-		err = ssz.ErrBytesLengthFn("--.AggregationBits", size, 16)
+	if size := len(s.AggregationBits); size != fieldparams.SyncCommitteeAggregationBytesLength {
+		err = ssz.ErrBytesLengthFn("--.AggregationBits", size, fieldparams.SyncCommitteeAggregationBytesLength)
 		return
 	}
 	dst = append(dst, s.AggregationBits...)
@@ -5993,8 +5995,8 @@ func (s *SyncCommitteeContribution) MarshalSSZTo(buf []byte) (dst []byte, err er
 	offset += len(s.Signatures) * 4627
 
 	// Field (4) 'Signatures'
-	if size := len(s.Signatures); size > 128 {
-		err = ssz.ErrListTooBigFn("--.Signatures", size, 128)
+	if size := len(s.Signatures); size > fieldparams.SyncCommitteeLength {
+		err = ssz.ErrListTooBigFn("--.Signatures", size, fieldparams.SyncCommitteeLength)
 		return
 	}
 	for ii := 0; ii < len(s.Signatures); ii++ {
@@ -6012,7 +6014,8 @@ func (s *SyncCommitteeContribution) MarshalSSZTo(buf []byte) (dst []byte, err er
 func (s *SyncCommitteeContribution) UnmarshalSSZ(buf []byte) error {
 	var err error
 	size := uint64(len(buf))
-	if size < 68 {
+	fixedSize := uint64(52 + fieldparams.SyncCommitteeAggregationBytesLength)
+	if size < fixedSize {
 		return ssz.ErrSize
 	}
 
@@ -6033,23 +6036,23 @@ func (s *SyncCommitteeContribution) UnmarshalSSZ(buf []byte) error {
 
 	// Field (3) 'AggregationBits'
 	if cap(s.AggregationBits) == 0 {
-		s.AggregationBits = make([]byte, 0, len(buf[48:64]))
+		s.AggregationBits = make([]byte, 0, len(buf[48:48+fieldparams.SyncCommitteeAggregationBytesLength]))
 	}
-	s.AggregationBits = append(s.AggregationBits, buf[48:64]...)
+	s.AggregationBits = append(s.AggregationBits, buf[48:48+fieldparams.SyncCommitteeAggregationBytesLength]...)
 
 	// Offset (4) 'Signatures'
-	if o4 = ssz.ReadOffset(buf[64:68]); o4 > size {
+	if o4 = ssz.ReadOffset(buf[48+fieldparams.SyncCommitteeAggregationBytesLength : fixedSize]); o4 > size {
 		return ssz.ErrOffset
 	}
 
-	if o4 < 68 {
+	if o4 < fixedSize {
 		return ssz.ErrInvalidVariableOffset
 	}
 
 	// Field (4) 'Signatures'
 	{
 		buf = tail[o4:]
-		num, err := ssz.DivideInt2(len(buf), 4627, 128)
+		num, err := ssz.DivideInt2(len(buf), 4627, fieldparams.SyncCommitteeLength)
 		if err != nil {
 			return err
 		}
@@ -6066,7 +6069,7 @@ func (s *SyncCommitteeContribution) UnmarshalSSZ(buf []byte) error {
 
 // SizeSSZ returns the ssz encoded size in bytes for the SyncCommitteeContribution object
 func (s *SyncCommitteeContribution) SizeSSZ() (size int) {
-	size = 68
+	size = 52 + fieldparams.SyncCommitteeAggregationBytesLength
 
 	// Field (4) 'Signatures'
 	size += len(s.Signatures) * 4627
@@ -6097,16 +6100,16 @@ func (s *SyncCommitteeContribution) HashTreeRootWith(hh *ssz.Hasher) (err error)
 	hh.PutUint64(s.SubcommitteeIndex)
 
 	// Field (3) 'AggregationBits'
-	if size := len(s.AggregationBits); size != 16 {
-		err = ssz.ErrBytesLengthFn("--.AggregationBits", size, 16)
+	if size := len(s.AggregationBits); size != fieldparams.SyncCommitteeAggregationBytesLength {
+		err = ssz.ErrBytesLengthFn("--.AggregationBits", size, fieldparams.SyncCommitteeAggregationBytesLength)
 		return
 	}
 	hh.PutBytes(s.AggregationBits)
 
 	// Field (4) 'Signatures'
 	{
-		if size := len(s.Signatures); size > 128 {
-			err = ssz.ErrListTooBigFn("--.Signatures", size, 128)
+		if size := len(s.Signatures); size > fieldparams.SyncCommitteeLength {
+			err = ssz.ErrListTooBigFn("--.Signatures", size, fieldparams.SyncCommitteeLength)
 			return
 		}
 		subIndx := hh.Index()
@@ -6120,9 +6123,9 @@ func (s *SyncCommitteeContribution) HashTreeRootWith(hh *ssz.Hasher) (err error)
 
 		numItems := uint64(len(s.Signatures))
 		if ssz.EnableVectorizedHTR {
-			hh.MerkleizeWithMixinVectorizedHTR(subIndx, numItems, 128)
+			hh.MerkleizeWithMixinVectorizedHTR(subIndx, numItems, fieldparams.SyncCommitteeLength)
 		} else {
-			hh.MerkleizeWithMixin(subIndx, numItems, 128)
+			hh.MerkleizeWithMixin(subIndx, numItems, fieldparams.SyncCommitteeLength)
 		}
 	}
 
