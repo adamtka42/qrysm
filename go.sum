@@ -64,10 +64,8 @@ github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMx
 github.com/VictoriaMetrics/fastcache v1.13.0 h1:AW4mheMR5Vd9FkAPUv+NH6Nhw+fmbTMGMsNAoA/+4G0=
 github.com/VictoriaMetrics/fastcache v1.13.0/go.mod h1:hHXhl4DA2fTL2HTZDJFXWgW0LNjo6B+4aj2Wmng3TjU=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
-github.com/adamtka42/go-qrl v0.0.0-20260520194145-0ead3b0964c8 h1:t+GdnzazacnhISeEEtSnJ3L4yVGO8+JQQ1VjL5XQhrI=
-github.com/adamtka42/go-qrl v0.0.0-20260520194145-0ead3b0964c8/go.mod h1:uRrDYtAQbYxBtJsXgiS2FoL53WNLvbD6E+3LJbWvXIw=
-github.com/adamtka42/go-qrllib v0.0.0-20260519105900-7a94ef463e57 h1:5T+nge+2uBCJh1CufyDC+Cp6yd5gI4XvBdkVU4iB4N8=
-github.com/adamtka42/go-qrllib v0.0.0-20260519105900-7a94ef463e57/go.mod h1:ZXa20c5HYw59NNWeS9JgG3TZH0C8dZPSzqRGhJqq6to=
+github.com/adamtka42/go-qrl v0.0.0-20260522092715-8d6608658868 h1:bvz0+pm2P56eONjZWjmEQqYCwAZV9SuTH1ekcSRupho=
+github.com/adamtka42/go-qrl v0.0.0-20260522092715-8d6608658868/go.mod h1:i2S3kvCrE+C+8oKWabEJRPQdMyuMevsPz5s2z9pDnWE=
 github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5/go.mod h1:SkGFH1ia65gfNATL8TAiHDNxPzPdmEL5uirI2Uyuz6c=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -179,6 +177,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.5/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46t
 github.com/creack/pty v1.1.7/go.mod h1:lj5s0c3V2DBrqTV7llrYr5NG6My20zk30Fl46Y7DoTY=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/cyberdelia/templates v0.0.0-20141128023046-ca7fffd4298c/go.mod h1:GyV+0YP4qX0UQ7r2MoYZ+AvYDp12OF5yg4q8rGnyNh4=
+github.com/cyyber/go-qrllib v0.0.0-20260520071712-ea6b16589b15 h1:O/J4meMOVebf8L/lrqSuNOv/fdRroSvlyQVTqplJjPA=
+github.com/cyyber/go-qrllib v0.0.0-20260520071712-ea6b16589b15/go.mod h1:ZXa20c5HYw59NNWeS9JgG3TZH0C8dZPSzqRGhJqq6to=
 github.com/d4l3k/messagediff v1.2.1 h1:ZcAIMYsUg0EAp9X+tt8/enBE/Q8Yd5kzPynLyKptt9U=
 github.com/d4l3k/messagediff v1.2.1/go.mod h1:Oozbb1TVXFac9FtSIxHBMnBCq2qeH/2KkEQxENCrlLo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
