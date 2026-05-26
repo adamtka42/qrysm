@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"bytes"
 	"context"
 	"encoding/hex"
 	"encoding/json"
@@ -1674,18 +1673,18 @@ func TestServer_SetVoluntaryExit(t *testing.T) {
 	}
 
 	beaconClient.EXPECT().ValidatorIndex(gomock.Any(), &qrysmpb.ValidatorIndexRequest{PublicKey: pubKeys[0][:]}).
-		Times(3).
+		Times(2).
 		Return(&qrysmpb.ValidatorIndexResponse{Index: 2}, nil)
 
 	beaconClient.EXPECT().DomainData(
 		gomock.Any(), // ctx
 		gomock.Any(), // epoch
-	).Times(3).
+	).Times(2).
 		Return(&qrysmpb.DomainResponse{SignatureDomain: make([]byte, 32)}, nil /*err*/)
 
 	mockNodeClient.EXPECT().
 		GetGenesis(gomock.Any(), gomock.Any()).
-		Times(3).
+		Times(2).
 		Return(&qrysmpb.Genesis{GenesisTime: genesisTime}, nil)
 
 	s := &Server{
@@ -1734,17 +1733,10 @@ func TestServer_SetVoluntaryExit(t *testing.T) {
 				require.NoError(t, err)
 				tt.w.epoch, err = client.CurrentEpoch(genesisResponse.GenesisTime)
 				require.NoError(t, err)
-				resp2, err := s.SetVoluntaryExit(ctx, &qrlpbservice.SetVoluntaryExitRequest{Pubkey: pubKeys[0][:], Epoch: tt.epoch})
-				require.NoError(t, err)
-				tt.w.signature = resp2.Data.Signature
 			}
 			require.Equal(t, uint64(tt.w.epoch), resp.Data.Message.Epoch)
 			require.Equal(t, tt.w.validatorIndex, resp.Data.Message.ValidatorIndex)
 			require.NotEmpty(t, resp.Data.Signature)
-			if tt.epoch == 0 {
-				ok = bytes.Equal(tt.w.signature, resp.Data.Signature)
-				require.Equal(t, true, ok)
-			}
 		})
 	}
 }

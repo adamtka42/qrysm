@@ -17,6 +17,7 @@ go_library(
         "kv.go",
         "log.go",
         "migration.go",
+        "migration_finalized_parent.go",
         "migration_state_validators.go",
         "p2p.go",
         "schema.go",

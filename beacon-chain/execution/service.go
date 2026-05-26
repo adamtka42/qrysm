@@ -443,6 +443,7 @@ func (s *Service) handleExecutionFollowDistance() {
 	blockHeight := s.latestExecutionData.BlockHeight
 	s.latestExecutionDataLock.RUnlock()
 	// check that web3 client is syncing
+	// lint:ignore uintcast -- Execution block timestamps are Unix seconds and fit in int64 for supported networks.
 	if time.Unix(int64(blockTime), 0).Before(fiveMinutesTimeout) {
 		log.Warn("Execution client is not syncing")
 	}

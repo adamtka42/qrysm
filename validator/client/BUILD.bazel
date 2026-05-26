@@ -134,6 +134,7 @@ go_test(
         "//consensus-types/validator",
         "//crypto/ml_dsa_87",
         "//crypto/ml_dsa_87/common/mock",
+        "//crypto/ml_dsa_87/ml_dsa_87t",
         "//encoding/bytesutil",
         "//proto/qrl/service",
         "//proto/qrysm/v1alpha1",

@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/hex"
 	"errors"
-	"reflect"
 	"sync"
 	"testing"
 	"time"
@@ -20,14 +19,13 @@ import (
 	"github.com/theQRL/qrysm/config/params"
 	"github.com/theQRL/qrysm/consensus-types/blocks"
 	"github.com/theQRL/qrysm/consensus-types/primitives"
+	"github.com/theQRL/qrysm/crypto/ml_dsa_87/ml_dsa_87t"
 	"github.com/theQRL/qrysm/encoding/bytesutil"
 	qrysmpb "github.com/theQRL/qrysm/proto/qrysm/v1alpha1"
-	validatorpb "github.com/theQRL/qrysm/proto/qrysm/v1alpha1/validator-client"
 	"github.com/theQRL/qrysm/testing/assert"
 	"github.com/theQRL/qrysm/testing/require"
 	"github.com/theQRL/qrysm/testing/util"
 	qrysmTime "github.com/theQRL/qrysm/time"
-	"gopkg.in/d4l3k/messagediff.v1"
 )
 
 func TestRequestAttestation_ValidatorDutiesRequestFailure(t *testing.T) {
@@ -148,23 +146,21 @@ func TestAttestToBlockHead_AttestsCorrectly(t *testing.T) {
 			Source:          &qrysmpb.Checkpoint{Root: sourceRoot[:], Epoch: 3},
 		},
 		AggregationBits: aggregationBitfield,
-		Signatures:      [][]byte{make([]byte, 4627)},
 	}
 
 	root, err := signing.ComputeSigningRoot(expectedAttestation.Data, make([]byte, 32))
 	require.NoError(t, err)
 
-	sig, err := validator.keyManager.Sign(context.Background(), &validatorpb.SignRequest{
-		PublicKey:   validatorKey.PublicKey().Marshal(),
-		SigningRoot: root[:],
-	})
+	require.NotNil(t, generatedAttestation)
+	require.DeepEqual(t, expectedAttestation.Data, generatedAttestation.Data)
+	require.DeepEqual(t, expectedAttestation.AggregationBits, generatedAttestation.AggregationBits)
+	require.Equal(t, 1, len(generatedAttestation.Signatures))
+	require.Equal(t, field_params.MLDSA87SignatureLength, len(generatedAttestation.Signatures[0]))
+	verifierPubKey, err := ml_dsa_87t.PublicKeyFromBytes(validatorKey.PublicKey().Marshal())
 	require.NoError(t, err)
-	expectedAttestation.Signatures = [][]byte{sig.Marshal()}
-	if !reflect.DeepEqual(generatedAttestation, expectedAttestation) {
-		t.Errorf("Incorrectly attested head, wanted %v, received %v", expectedAttestation, generatedAttestation)
-		diff, _ := messagediff.PrettyDiff(expectedAttestation, generatedAttestation)
-		t.Log(diff)
-	}
+	valid, err := ml_dsa_87t.VerifySignature(generatedAttestation.Signatures[0], root, verifierPubKey)
+	require.NoError(t, err)
+	require.Equal(t, true, valid)
 	require.LogsDoNotContain(t, hook, "Could not")
 }
 

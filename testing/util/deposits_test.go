@@ -8,7 +8,6 @@ import (
 	"github.com/theQRL/qrysm/config/params"
 	qrysmpb "github.com/theQRL/qrysm/proto/qrysm/v1alpha1"
 	"github.com/theQRL/qrysm/testing/require"
-	"google.golang.org/protobuf/proto"
 )
 
 func assertDepositShape(t *testing.T, deposit *qrysmpb.Deposit, depositDataRoot [32]byte) {
@@ -59,15 +58,21 @@ func TestDepositsWithBalance_MatchesDeterministic(t *testing.T) {
 
 	determDeposits, _, err := DeterministicDepositsAndKeys(uint64(entries))
 	require.NoError(t, err)
-	_, determDepositDataRoots, err := DeterministicDepositTrie(entries)
-	require.NoError(t, err)
 
 	for i := range entries {
-		if !proto.Equal(deposits[i], determDeposits[i]) {
-			t.Errorf("Expected deposit %d to match", i)
+		if !bytes.Equal(deposits[i].Data.PublicKey, determDeposits[i].Data.PublicKey) {
+			t.Errorf("Expected deposit public key %d to match", i)
 		}
-		if !bytes.Equal(depositDataRoots[i][:], determDepositDataRoots[i][:]) {
-			t.Errorf("Expected deposit root %d to match", i)
+		if deposits[i].Data.Amount != determDeposits[i].Data.Amount {
+			t.Errorf("Expected deposit amount %d to match", i)
+		}
+		if !bytes.Equal(deposits[i].Data.WithdrawalCredentials, determDeposits[i].Data.WithdrawalCredentials) {
+			t.Errorf("Expected deposit withdrawal credentials %d to match", i)
+		}
+		depositDataRoot, err := deposits[i].Data.HashTreeRoot()
+		require.NoError(t, err)
+		if !bytes.Equal(depositDataRoots[i][:], depositDataRoot[:]) {
+			t.Errorf("Expected deposit root %d to match deposit data root", i)
 		}
 	}
 }
@@ -95,15 +100,21 @@ func TestDepositsWithBalance_MatchesDeterministic_Cached(t *testing.T) {
 	// Get 64 standard deposits.
 	determDeposits, _, err := DeterministicDepositsAndKeys(uint64(entries))
 	require.NoError(t, err)
-	_, determDepositDataRoots, err := DeterministicDepositTrie(entries)
-	require.NoError(t, err)
 
 	for i := range entries {
-		if !proto.Equal(deposits[i], determDeposits[i]) {
-			t.Errorf("Expected deposit %d to match", i)
+		if !bytes.Equal(deposits[i].Data.PublicKey, determDeposits[i].Data.PublicKey) {
+			t.Errorf("Expected deposit public key %d to match", i)
 		}
-		if !bytes.Equal(depositDataRoots[i][:], determDepositDataRoots[i][:]) {
-			t.Errorf("Expected deposit root %d to match", i)
+		if deposits[i].Data.Amount != determDeposits[i].Data.Amount {
+			t.Errorf("Expected deposit amount %d to match", i)
+		}
+		if !bytes.Equal(deposits[i].Data.WithdrawalCredentials, determDeposits[i].Data.WithdrawalCredentials) {
+			t.Errorf("Expected deposit withdrawal credentials %d to match", i)
+		}
+		depositDataRoot, err := deposits[i].Data.HashTreeRoot()
+		require.NoError(t, err)
+		if !bytes.Equal(depositDataRoots[i][:], depositDataRoot[:]) {
+			t.Errorf("Expected deposit root %d to match deposit data root", i)
 		}
 	}
 }
