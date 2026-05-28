@@ -631,9 +631,15 @@ func BuilderSettingsFromFlags(cliCtx *cli.Context) (*validatorServiceConfig.Buil
 }
 
 func validateFeeRecipientAddress(feeRecipient string) error {
-	_, err := common.NewMixedcaseAddressFromString(feeRecipient)
+	mixedcaseAddress, err := common.NewMixedcaseAddressFromString(feeRecipient)
 	if err != nil {
 		return errors.Wrapf(err, "could not decode fee recipient %s", feeRecipient)
+	}
+	if !mixedcaseAddress.ValidChecksum() {
+		log.Warnf("Fee recipient %s is not a checksum QRL address. "+
+			"The checksummed address is %s and will be used as the fee recipient. "+
+			"We recommend using a mixed-case address (checksum) "+
+			"to prevent spelling mistakes in your fee recipient QRL address", feeRecipient, mixedcaseAddress.Address().Hex())
 	}
 	return nil
 }
