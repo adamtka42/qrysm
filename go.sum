@@ -198,6 +198,10 @@ github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/
 github.com/aclements/go-moremath v0.0.0-20210112150236-f10218a38794/go.mod h1:7e+I0LQFUI9AXWxOfsQROs9xPhoJtbsyWcjJqDd4KPY=
 github.com/adamtka42/go-qrl v0.0.0-20260522092715-8d6608658868 h1:bvz0+pm2P56eONjZWjmEQqYCwAZV9SuTH1ekcSRupho=
 github.com/adamtka42/go-qrl v0.0.0-20260522092715-8d6608658868/go.mod h1:i2S3kvCrE+C+8oKWabEJRPQdMyuMevsPz5s2z9pDnWE=
+github.com/adamtka42/go-qrl v0.0.0-20260528152854-a02110a14a60 h1:LEBZJjYpofDtPb4wox1569k89tEgm6XQXIR/HR5rXKk=
+github.com/adamtka42/go-qrl v0.0.0-20260528152854-a02110a14a60/go.mod h1:xSEIOTUU3Pu4Gv7YIJF5adk/xC0TfgQMBd/0LctiTq4=
+github.com/adamtka42/go-qrllib v0.0.0-20260528135157-a4888358f555 h1:VECtgGZ+sQfNpAZuGUREE8Jbe7Fm0R20PxyoybbUaWw=
+github.com/adamtka42/go-qrllib v0.0.0-20260528135157-a4888358f555/go.mod h1:ZXa20c5HYw59NNWeS9JgG3TZH0C8dZPSzqRGhJqq6to=
 github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5/go.mod h1:SkGFH1ia65gfNATL8TAiHDNxPzPdmEL5uirI2Uyuz6c=
 github.com/alecthomas/kingpin/v2 v2.4.0/go.mod h1:0gyi0zQnjuFk8xrkNKamJoyUo382HRL7ATRpFZCw6tE=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
