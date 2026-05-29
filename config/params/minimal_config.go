@@ -28,9 +28,6 @@ func MinimalSpecConfig() *BeaconChainConfig {
 	minimalConfig.EjectionBalance = 20000e9
 	minimalConfig.EffectiveBalanceIncrement = 1e9
 
-	// Initial values
-	minimalConfig.ExecutionAddressWithdrawalPrefixByte = byte(0)
-
 	// Time parameters
 	minimalConfig.SecondsPerSlot = 6
 	minimalConfig.MinAttestationInclusionDelay = 1

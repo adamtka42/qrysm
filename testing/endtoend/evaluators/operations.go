@@ -348,7 +348,7 @@ func proposeVoluntaryExit(ec *e2etypes.EvaluationContext, conns ...*grpc.ClientC
 	execIndices := []int{}
 	for idx, val := range validators {
 		withdrawalCredentials := val.GetWithdrawalCredentials()
-		if len(withdrawalCredentials) > 0 && withdrawalCredentials[0] == params.BeaconConfig().ExecutionAddressWithdrawalPrefixByte {
+		if len(withdrawalCredentials) == field_params.WithdrawalCredentialsLength {
 			execIndices = append(execIndices, idx)
 		}
 	}

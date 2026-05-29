@@ -1626,7 +1626,7 @@ func (x *BlindedBeaconBlockBodyZond) GetExecutionPayloadHeader() *v1.ExecutionPa
 type Deposit_Data struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	Pubkey                []byte                 `protobuf:"bytes,1,opt,name=pubkey,proto3" json:"pubkey,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
+	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
 	Amount                uint64                 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	Signature             []byte                 `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature,omitempty" ssz-size:"4627"`
 	unknownFields         protoimpl.UnknownFields

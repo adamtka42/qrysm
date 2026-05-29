@@ -108,21 +108,9 @@ func validateDeposit(depositData *DepositData, credential *Credential) bool {
 			len(withdrawalCredentials), field_params.WithdrawalCredentialsLength))
 	}
 
-	const withdrawalAddressOffset = 16
-	zeroPadding := make([]byte, withdrawalAddressOffset-1)
-	if withdrawalCredentials[0] == params.BeaconConfig().ExecutionAddressWithdrawalPrefixByte {
-		if !reflect.DeepEqual(withdrawalCredentials[1:withdrawalAddressOffset], zeroPadding) {
-			panic(fmt.Errorf("withdrawal credentials zero bytes not found for index 1:%d", withdrawalAddressOffset))
-		}
-		if err != nil {
-			panic(fmt.Errorf("failed to read withdrawal address | reason %v", err))
-		}
-		if !reflect.DeepEqual(withdrawalCredentials[withdrawalAddressOffset:], credential.withdrawalAddress.Bytes()) {
-			panic(fmt.Errorf("withdrawalCredentials[%d:] %x mismatch with credential.QRLWithdrawalAddress %x",
-				withdrawalAddressOffset, withdrawalCredentials[withdrawalAddressOffset:], credential.withdrawalAddress.Bytes()))
-		}
-	} else {
-		panic(fmt.Errorf("invalid prefixbyte withdrawalCredentials[0] %x", withdrawalCredentials[0]))
+	if !reflect.DeepEqual(withdrawalCredentials, credential.withdrawalAddress.Bytes()) {
+		panic(fmt.Errorf("withdrawalCredentials %x mismatch with credential.QRLWithdrawalAddress %x",
+			withdrawalCredentials, credential.withdrawalAddress.Bytes()))
 	}
 
 	if len(signature) != field_params.MLDSA87SignatureLength {

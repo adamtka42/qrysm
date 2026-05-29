@@ -467,7 +467,7 @@ func genSignedBeaconBlockHeader() *v1alpha1.SignedBeaconBlockHeader {
 func genDepositData() *v1alpha1.Deposit_Data {
 	return &v1alpha1.Deposit_Data{
 		PublicKey:             bytes(32),
-		WithdrawalCredentials: bytes(80),
+		WithdrawalCredentials: bytes(64),
 		Amount:                20000,
 		Signature:             bytes(32),
 	}
@@ -513,7 +513,7 @@ func genSignedVoluntaryExits(num int) []*v1alpha1.SignedVoluntaryExit {
 func genValidator() *v1alpha1.Validator {
 	return &v1alpha1.Validator{
 		PublicKey:                  bytes(32),
-		WithdrawalCredentials:      bytes(80),
+		WithdrawalCredentials:      bytes(64),
 		EffectiveBalance:           12345,
 		Slashed:                    true,
 		ActivationEligibilityEpoch: 14322,

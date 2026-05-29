@@ -1698,8 +1698,8 @@ type Validator struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 2592 byte ML-DSA-87 public key used for the validator's activities.
 	PublicKey []byte `protobuf:"bytes,1,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	// 32 byte hash of the withdrawal destination public key.
-	WithdrawalCredentials []byte `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"32"`
+	// 64 byte withdrawal execution address.
+	WithdrawalCredentials []byte `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
 	// The validators current effective balance in shor.
 	EffectiveBalance uint64 `protobuf:"varint,3,opt,name=effective_balance,json=effectiveBalance,proto3" json:"effective_balance,omitempty"`
 	// Whether or not the validator has been slashed.

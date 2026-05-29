@@ -433,7 +433,7 @@ func TestBeaconStateZondToProto(t *testing.T) {
 		state.ExecutionDepositIndex = 8
 		state.Validators = []*qrysmpb.Validator{{
 			PublicKey:                  bytesutil.PadTo([]byte("publickey"), 2592),
-			WithdrawalCredentials:      bytesutil.PadTo([]byte("withdrawalcredentials"), 80),
+			WithdrawalCredentials:      bytesutil.PadTo([]byte("withdrawalcredentials"), 64),
 			EffectiveBalance:           9,
 			Slashed:                    true,
 			ActivationEligibilityEpoch: 10,

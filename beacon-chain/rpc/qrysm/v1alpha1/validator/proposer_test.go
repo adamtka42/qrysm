@@ -1327,7 +1327,7 @@ func TestProposer_ExecutionData_MajorityVote(t *testing.T) {
 			Data: &qrysmpb.Deposit_Data{
 				PublicKey:             bytesutil.PadTo([]byte("a"), field_params.MLDSA87PubkeyLength),
 				Signature:             make([]byte, field_params.MLDSA87SignatureLength),
-				WithdrawalCredentials: make([]byte, 80),
+				WithdrawalCredentials: make([]byte, 64),
 			}},
 	}
 	depositTrie, err := trie.NewTrie(params.BeaconConfig().DepositContractTreeDepth)

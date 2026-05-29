@@ -1548,7 +1548,7 @@ func (x *SignedBuilderBidZond) GetSignature() []byte {
 type Deposit_Data struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	PublicKey             []byte                 `protobuf:"bytes,1,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty" spec-name:"pubkey" ssz-size:"2592"`
-	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"80"`
+	WithdrawalCredentials []byte                 `protobuf:"bytes,2,opt,name=withdrawal_credentials,json=withdrawalCredentials,proto3" json:"withdrawal_credentials,omitempty" ssz-size:"64"`
 	Amount                uint64                 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 	Signature             []byte                 `protobuf:"bytes,4,opt,name=signature,proto3" json:"signature,omitempty" ssz-size:"4627"`
 	unknownFields         protoimpl.UnknownFields
