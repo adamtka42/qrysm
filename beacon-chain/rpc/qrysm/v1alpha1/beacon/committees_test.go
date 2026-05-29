@@ -93,7 +93,7 @@ func TestServer_ListBeaconCommittees_PreviousEpoch(t *testing.T) {
 	numValidators := 128
 	headState := setupActiveValidators(t, numValidators)
 
-	mixes := make([][]byte, params.BeaconConfig().EpochsPerHistoricalVector)
+	mixes := make([][]byte, fieldparams.RandaoMixesLength)
 	for i := range mixes {
 		mixes[i] = make([]byte, fieldparams.RootLength)
 	}

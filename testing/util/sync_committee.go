@@ -3,6 +3,7 @@ package util
 import (
 	field_params "github.com/theQRL/qrysm/config/fieldparams"
 	fieldparams "github.com/theQRL/qrysm/config/fieldparams"
+	"github.com/theQRL/qrysm/config/params"
 	"github.com/theQRL/qrysm/encoding/bytesutil"
 	qrysmpb "github.com/theQRL/qrysm/proto/qrysm/v1alpha1"
 )
@@ -22,7 +23,7 @@ func HydrateSyncCommittee(s *qrysmpb.SyncCommitteeMessage) *qrysmpb.SyncCommitte
 // these keys as members. Some keys may appear repeated
 func ConvertToCommittee(inputKeys [][]byte) *qrysmpb.SyncCommittee {
 	var pubKeys [][]byte
-	for i := uint64(0); i < fieldparams.SyncCommitteeLength; i++ {
+	for i := uint64(0); i < params.BeaconConfig().SyncCommitteeSize; i++ {
 		if i < uint64(len(inputKeys)) {
 			pubKeys = append(pubKeys, bytesutil.PadTo(inputKeys[i], field_params.MLDSA87PubkeyLength))
 		} else {

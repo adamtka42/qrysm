@@ -602,9 +602,7 @@ func TestServer_ListIndexedAttestations_GenesisEpoch(t *testing.T) {
 
 func TestServer_ListIndexedAttestations_OldEpoch(t *testing.T) {
 	params.SetupTestConfigCleanup(t)
-	// Force mainnet to keep EpochsPerHistoricalVector matched with the
-	// compile-time fieldparams.RandaoMixesLength (65536); other tests in
-	// the package may have flipped to minimal beforehand.
+	// Keep this test on minimal config, but use fieldparams for fixed SSZ vector lengths.
 	params.OverrideBeaconConfig(params.MinimalSpecConfig())
 	db := dbTest.SetupDB(t)
 	helpers.ClearCache()
@@ -646,7 +644,7 @@ func TestServer_ListIndexedAttestations_OldEpoch(t *testing.T) {
 	numValidators := uint64(128)
 	state, _ := util.DeterministicGenesisStateZond(t, numValidators)
 
-	randaoMixes := make([][]byte, params.BeaconConfig().EpochsPerHistoricalVector)
+	randaoMixes := make([][]byte, fieldparams.RandaoMixesLength)
 	for i := range randaoMixes {
 		randaoMixes[i] = make([]byte, fieldparams.RootLength)
 	}
