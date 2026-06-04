@@ -1,0 +1,70 @@
+name: Build & Release qrysm
+
+on:
+  push:
+    branches: [main, master, configure-github-action]
+    tags: ['v*']
+  pull_request:
+    branches: [main, master, configure-github-action]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, x64, zond]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Clean Zig cache
+        run: rm -rf /tmp/zig-cache && mkdir -p /tmp/zig-cache
+
+      - name: System info
+        run: |
+          echo "Runner: $(hostname)"
+          echo "Go: $(go version 2>/dev/null || echo 'not installed')"
+          echo "Bazel: $(bazel --version 2>/dev/null || echo 'not installed')"
+          echo "Docker: $(docker --version 2>/dev/null || echo 'not installed')"
+
+      - name: Build binaries
+        run: |
+          bazel build --config=release \
+            --spawn_strategy=local \
+            //cmd/beacon-chain:beacon-chain \
+            //cmd/validator:validator \
+            //cmd/qrysmctl:qrysmctl
+
+      - name: Run tests
+        run: |
+          bazel test \
+            --spawn_strategy=local \
+            --test_output=errors \
+            --keep_going \
+            --build_tests_only \
+            --local_ram_resources=4096 \
+            --jobs=2 \
+            //...
+
+      - name: Docker Login
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build & Push Docker Images
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          export PATH="$(pwd)/bin:$PATH"
+          chmod +x ./hack/build_and_upload_docker.sh
+          ./hack/build_and_upload_docker.sh ${GITHUB_REF_NAME}
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            bazel-bin/cmd/beacon-chain/beacon-chain_/beacon-chain
+            bazel-bin/cmd/validator/validator_/validator
+            bazel-bin/cmd/qrysmctl/qrysmctl_/qrysmctl
+          generate_release_notes: true
